@@ -1,4 +1,4 @@
-let interval;
+let timeoutId;
 let lastSeries = [];
 let isRunning = false;
 
@@ -29,7 +29,7 @@ function startGenerator() {
         }
 
         // Tiempo en blanco antes de mostrar el número
-        setTimeout(() => {
+        timeoutId = setTimeout(() => {
             if (!isRunning) return; // Detener si se presionó Stop
 
             const randomNumbers = [];
@@ -44,11 +44,11 @@ function startGenerator() {
             numbersDiv.style.fontSize = `${size}px`;
 
             // Tiempo de visualización del número
-            setTimeout(() => {
+            timeoutId = setTimeout(() => {
                 numbersDiv.innerHTML = ''; // Vuelve a blanco después de mostrar el número
 
                 // Tiempo en blanco antes del siguiente número
-                setTimeout(() => {
+                timeoutId = setTimeout(() => {
                     count++;
                     showNextNumber(); // Repite el ciclo
                 }, delay);
@@ -61,8 +61,7 @@ function startGenerator() {
 
 function stopGenerator() {
     isRunning = false;
-    clearInterval(interval);
-    interval = null;
+    clearTimeout(timeoutId); // Detiene todos los timeouts
     document.getElementById('numbers').innerHTML = ''; // Limpia la pantalla
 }
 
