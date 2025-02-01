@@ -13,13 +13,14 @@ function startGenerator() {
     const pairs = parseInt(document.getElementById('pairs').value);
 
     const numbersDiv = document.getElementById('numbers');
-    numbersDiv.innerHTML = '';
+    numbersDiv.innerHTML = ''; // Comienza en blanco
     lastSeries = [];
 
     let count = 0;
-    interval = setInterval(() => {
+    function showNextNumber() {
         if (count >= quantity) {
-            stopGenerator();
+            numbersDiv.innerHTML = ''; // Termina en blanco
+            clearInterval(interval);
             return;
         }
 
@@ -32,19 +33,23 @@ function startGenerator() {
 
         // Limpiar el número después del tiempo de visualización
         setTimeout(() => {
-            if (count + 1 < quantity || interval === null) {
-                numbersDiv.innerHTML = '';
+            numbersDiv.innerHTML = '';
+            count++;
+            if (count < quantity) {
+                setTimeout(showNextNumber, delay); // Espera el tiempo entre números
+            } else {
+                numbersDiv.innerHTML = ''; // Termina en blanco
             }
         }, displayTime);
+    }
 
-        count++;
-    }, delay);
+    showNextNumber(); // Inicia la secuencia
 }
 
 function stopGenerator() {
     clearInterval(interval);
     interval = null;
-    document.getElementById('numbers').innerHTML = '';
+    document.getElementById('numbers').innerHTML = ''; // Limpia la pantalla
 }
 
 function showLastSeries() {
