@@ -8,6 +8,20 @@
 </head>
 <body>
     <div class="container">
+        <!-- Sección de perfiles -->
+        <div class="profile-controls">
+            <div class="control-group">
+                <label for="profileSelect">Perfil:</label>
+                <select id="profileSelect">
+                    <option value="">Selecciona un perfil</option>
+                </select>
+                <button id="saveProfile">Guardar</button>
+                <button id="deleteProfile">Eliminar</button>
+                <button id="addProfile">Agregar</button>
+            </div>
+        </div>
+
+        <!-- Controles principales -->
         <div class="controls">
             <div class="control-group">
                 <label for="mode">Modo:</label>
@@ -39,21 +53,12 @@
             </div>
         </div>
 
-        <div class="profile-controls">
-            <div class="control-group">
-                <label for="profileSelect">Perfil:</label>
-                <select id="profileSelect">
-                    <option value="">Selecciona un perfil</option>
-                </select>
-            </div>
-            <button id="saveProfile">Guardar Perfil</button>
-            <button id="deleteProfile">Eliminar Perfil</button>
-        </div>
-
+        <!-- Área de números -->
         <div class="numbers-container">
             <div class="numbers" id="numbers"></div>
         </div>
 
+        <!-- Botones de control -->
         <div class="buttons">
             <button id="start">Start</button>
             <button id="stop">Stop</button>
