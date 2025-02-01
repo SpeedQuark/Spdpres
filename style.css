@@ -65,6 +65,11 @@ body {
     gap: 10px; /* Espacio entre números simultáneos */
 }
 
+.numbers .separator {
+    font-size: 24px; /* Tamaño del punto medio */
+    margin: 0 10px; /* Espacio alrededor del punto medio */
+}
+
 .buttons {
     display: flex;
     justify-content: space-between;
