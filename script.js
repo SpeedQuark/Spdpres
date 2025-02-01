@@ -48,7 +48,10 @@ function startGenerator() {
             }
             lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
 
-            numbersDiv.innerHTML = randomNumbers.join('<br>'); // Mostrar números simultáneos con salto de línea
+            // Mostrar números simultáneos con punto medio
+            numbersDiv.innerHTML = randomNumbers
+                .map((num) => `<div>${num}</div>`) // Cada número en un div
+                .join('<span class="separator"> • </span>'); // Separador con punto medio
             numbersDiv.style.fontSize = `${size}px`;
 
             // Tiempo de visualización del número
@@ -91,3 +94,5 @@ function stopGenerator() {
 function showLastSeries() {
     alert(`Última serie:\n${lastSeries.join('\n')}`);
 }
+
+   
