@@ -8,6 +8,7 @@ document.getElementById('showLast').addEventListener('click', showLastSeries);
 function startGenerator() {
     const quantity = parseInt(document.getElementById('quantity').value);
     const delay = parseInt(document.getElementById('delay').value);
+    const displayTime = parseInt(document.getElementById('displayTime').value);
     const size = parseInt(document.getElementById('size').value);
     const pairs = parseInt(document.getElementById('pairs').value);
 
@@ -28,12 +29,21 @@ function startGenerator() {
         numbersDiv.innerHTML = randomNumber;
         numbersDiv.style.fontSize = `${size}px`;
 
+        // Limpiar el número después del tiempo de visualización
+        setTimeout(() => {
+            if (count + 1 < quantity || interval === null) {
+                numbersDiv.innerHTML = '';
+            }
+        }, displayTime);
+
         count++;
     }, delay);
 }
 
 function stopGenerator() {
     clearInterval(interval);
+    interval = null;
+    document.getElementById('numbers').innerHTML = '';
 }
 
 function showLastSeries() {
