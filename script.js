@@ -40,15 +40,15 @@ function startGenerator() {
                     randomNumber = Math.floor(Math.random() * 100);
                     randomNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
                 } else if (mode === "binary6") {
-                    randomNumber = generateBinary(6); // Genera binario de 6 cifras
+                    randomNumber = formatBinary(generateBinary(6), 3); // Binario de 6 cifras, formato 3x2
                 } else if (mode === "binary8") {
-                    randomNumber = generateBinary(8); // Genera binario de 8 cifras
+                    randomNumber = formatBinary(generateBinary(8), 4); // Binario de 8 cifras, formato 4x2
                 }
                 randomNumbers.push(randomNumber);
             }
             lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
 
-            numbersDiv.innerHTML = randomNumbers.join(' • '); // Mostrar números simultáneos
+            numbersDiv.innerHTML = randomNumbers.join('<br>'); // Mostrar números simultáneos con salto de línea
             numbersDiv.style.fontSize = `${size}px`;
 
             // Tiempo de visualización del número
@@ -73,6 +73,14 @@ function generateBinary(length) {
         binary += Math.round(Math.random()); // Genera 0 o 1
     }
     return binary;
+}
+
+function formatBinary(binary, groupSize) {
+    let formattedBinary = '';
+    for (let i = 0; i < binary.length; i += groupSize) {
+        formattedBinary += binary.slice(i, i + groupSize) + '<br>'; // Agrega salto de línea
+    }
+    return formattedBinary.trim(); // Elimina el último salto de línea
 }
 
 function stopGenerator() {
