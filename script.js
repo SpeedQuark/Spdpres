@@ -1,11 +1,15 @@
 let interval;
 let lastSeries = [];
+let isRunning = false;
 
 document.getElementById('start').addEventListener('click', startGenerator);
 document.getElementById('stop').addEventListener('click', stopGenerator);
 document.getElementById('showLast').addEventListener('click', showLastSeries);
 
 function startGenerator() {
+    if (isRunning) return; // Evita múltiples ejecuciones
+    isRunning = true;
+
     const quantity = parseInt(document.getElementById('quantity').value);
     const delay = parseInt(document.getElementById('delay').value);
     const displayTime = parseInt(document.getElementById('displayTime').value);
@@ -19,18 +23,24 @@ function startGenerator() {
     let count = 0;
 
     function showNextNumber() {
-        if (count >= quantity) {
+        if (count >= quantity || !isRunning) {
             stopGenerator();
             return;
         }
 
         // Tiempo en blanco antes de mostrar el número
         setTimeout(() => {
-            const randomNumber = Math.floor(Math.random() * 100);
-            const formattedNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
-            lastSeries.push(formattedNumber);
+            if (!isRunning) return; // Detener si se presionó Stop
 
-            numbersDiv.innerHTML = formattedNumber;
+            const randomNumbers = [];
+            for (let i = 0; i < pairs; i++) {
+                const randomNumber = Math.floor(Math.random() * 100);
+                const formattedNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
+                randomNumbers.push(formattedNumber);
+            }
+            lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
+
+            numbersDiv.innerHTML = randomNumbers.join(' • '); // Mostrar números simultáneos
             numbersDiv.style.fontSize = `${size}px`;
 
             // Tiempo de visualización del número
@@ -50,11 +60,12 @@ function startGenerator() {
 }
 
 function stopGenerator() {
+    isRunning = false;
     clearInterval(interval);
     interval = null;
     document.getElementById('numbers').innerHTML = ''; // Limpia la pantalla
 }
 
 function showLastSeries() {
-    alert(`Última serie: ${lastSeries.join(', ')}`);
+    alert(`Última serie:\n${lastSeries.join('\n')}`);
 }
