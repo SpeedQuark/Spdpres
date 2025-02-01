@@ -5,6 +5,9 @@ let isRunning = false;
 document.getElementById('start').addEventListener('click', startGenerator);
 document.getElementById('stop').addEventListener('click', stopGenerator);
 document.getElementById('showLast').addEventListener('click', showLastSeries);
+document.getElementById('saveProfile').addEventListener('click', saveProfile);
+document.getElementById('loadProfile').addEventListener('click', loadProfile);
+document.getElementById('deleteProfile').addEventListener('click', deleteProfile);
 
 function startGenerator() {
     if (isRunning) return; // Evita múltiples ejecuciones
@@ -93,4 +96,64 @@ function stopGenerator() {
 
 function showLastSeries() {
     alert(`Última serie:\n${lastSeries.join('\n')}`);
+}
+
+// Funcionalidad de perfiles
+function saveProfile() {
+    const profileName = document.getElementById('profileName').value.trim();
+    if (!profileName) {
+        alert("Por favor, ingresa un nombre para el perfil.");
+        return;
+    }
+
+    const profile = {
+        mode: document.getElementById('mode').value,
+        quantity: document.getElementById('quantity').value,
+        delay: document.getElementById('delay').value,
+        displayTime: document.getElementById('displayTime').value,
+        size: document.getElementById('size').value,
+        pairs: document.getElementById('pairs').value,
+    };
+
+    localStorage.setItem(profileName, JSON.stringify(profile));
+    alert(`Perfil "${profileName}" guardado correctamente.`);
+}
+
+function loadProfile() {
+    const profileName = document.getElementById('profileName').value.trim();
+    if (!profileName) {
+        alert("Por favor, ingresa el nombre del perfil.");
+        return;
+    }
+
+    const profile = JSON.parse(localStorage.getItem(profileName));
+    if (!profile) {
+        alert(`El perfil "${profileName}" no existe.`);
+        return;
+    }
+
+    document.getElementById('mode').value = profile.mode;
+    document.getElementById('quantity').value = profile.quantity;
+    document.getElementById('delay').value = profile.delay;
+    document.getElementById('displayTime').value = profile.displayTime;
+    document.getElementById('size').value = profile.size;
+    document.getElementById('pairs').value = profile.pairs;
+
+    alert(`Perfil "${profileName}" cargado correctamente.`);
+}
+
+function deleteProfile() {
+    const profileName = document.getElementById('profileName').value.trim();
+    if (!profileName) {
+        alert("Por favor, ingresa el nombre del perfil.");
+        return;
+    }
+
+    if (!localStorage.getItem(profileName)) {
+        alert(`El perfil "${profileName}" no existe.`);
+        return;
+    }
+
+    localStorage.removeItem(profileName);
+    alert(`Perfil "${profileName}" eliminado correctamente.`);
 }
