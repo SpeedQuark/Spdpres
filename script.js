@@ -17,30 +17,33 @@ function startGenerator() {
     lastSeries = [];
 
     let count = 0;
+
     function showNextNumber() {
         if (count >= quantity) {
-            numbersDiv.innerHTML = ''; // Termina en blanco
-            clearInterval(interval);
+            stopGenerator();
             return;
         }
 
-        const randomNumber = Math.floor(Math.random() * 100);
-        const formattedNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
-        lastSeries.push(formattedNumber);
-
-        numbersDiv.innerHTML = formattedNumber;
-        numbersDiv.style.fontSize = `${size}px`;
-
-        // Limpiar el número después del tiempo de visualización
+        // Tiempo en blanco antes de mostrar el número
         setTimeout(() => {
-            numbersDiv.innerHTML = '';
-            count++;
-            if (count < quantity) {
-                setTimeout(showNextNumber, delay); // Espera el tiempo entre números
-            } else {
-                numbersDiv.innerHTML = ''; // Termina en blanco
-            }
-        }, displayTime);
+            const randomNumber = Math.floor(Math.random() * 100);
+            const formattedNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
+            lastSeries.push(formattedNumber);
+
+            numbersDiv.innerHTML = formattedNumber;
+            numbersDiv.style.fontSize = `${size}px`;
+
+            // Tiempo de visualización del número
+            setTimeout(() => {
+                numbersDiv.innerHTML = ''; // Vuelve a blanco después de mostrar el número
+
+                // Tiempo en blanco antes del siguiente número
+                setTimeout(() => {
+                    count++;
+                    showNextNumber(); // Repite el ciclo
+                }, delay);
+            }, displayTime);
+        }, delay); // Tiempo en blanco inicial
     }
 
     showNextNumber(); // Inicia la secuencia
