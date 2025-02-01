@@ -24,9 +24,10 @@ function startGenerator() {
         }
 
         const randomNumber = Math.floor(Math.random() * 100);
-        lastSeries.push(randomNumber);
+        const formattedNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
+        lastSeries.push(formattedNumber);
 
-        numbersDiv.innerHTML = randomNumber;
+        numbersDiv.innerHTML = formattedNumber;
         numbersDiv.style.fontSize = `${size}px`;
 
         // Limpiar el número después del tiempo de visualización
