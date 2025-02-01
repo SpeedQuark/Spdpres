@@ -48,9 +48,9 @@ function startGenerator() {
             }
             lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
 
-            // Mostrar números simultáneos con punto medio
+            // Mostrar números simultáneos uno al lado del otro
             numbersDiv.innerHTML = randomNumbers
-                .map((num) => `<div>${num}</div>`) // Cada número en un div
+                .map((num) => `<div class="number-pair">${num}</div>`) // Cada número en un div
                 .join('<span class="separator"> • </span>'); // Separador con punto medio
             numbersDiv.style.fontSize = `${size}px`;
 
@@ -94,5 +94,3 @@ function stopGenerator() {
 function showLastSeries() {
     alert(`Última serie:\n${lastSeries.join('\n')}`);
 }
-
-   
