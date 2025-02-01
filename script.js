@@ -7,6 +7,7 @@ document.getElementById('stop').addEventListener('click', stopGenerator);
 document.getElementById('showLast').addEventListener('click', showLastSeries);
 document.getElementById('saveProfile').addEventListener('click', saveProfile);
 document.getElementById('deleteProfile').addEventListener('click', deleteProfile);
+document.getElementById('addProfile').addEventListener('click', addProfile);
 document.getElementById('profileSelect').addEventListener('change', loadProfile);
 
 // Cargar perfiles al iniciar
@@ -116,9 +117,9 @@ function loadProfiles() {
 }
 
 function saveProfile() {
-    const profileName = prompt("Ingresa un nombre para el perfil:");
+    const profileName = document.getElementById('profileSelect').value;
     if (!profileName) {
-        alert("Debes ingresar un nombre para el perfil.");
+        alert("Selecciona un perfil para guardar.");
         return;
     }
 
@@ -170,5 +171,31 @@ function deleteProfile() {
 
     localStorage.removeItem(profileName);
     alert(`Perfil "${profileName}" eliminado correctamente.`);
+    loadProfiles(); // Actualizar la lista de perfiles
+}
+
+function addProfile() {
+    const profileName = prompt("Ingresa un nombre para el nuevo perfil:");
+    if (!profileName) {
+        alert("Debes ingresar un nombre para el perfil.");
+        return;
+    }
+
+    if (localStorage.getItem(profileName)) {
+        alert(`El perfil "${profileName}" ya existe.`);
+        return;
+    }
+
+    const profile = {
+        mode: document.getElementById('mode').value,
+        quantity: document.getElementById('quantity').value,
+        delay: document.getElementById('delay').value,
+        displayTime: document.getElementById('displayTime').value,
+        size: document.getElementById('size').value,
+        pairs: document.getElementById('pairs').value,
+    };
+
+    localStorage.setItem(profileName, JSON.stringify(profile));
+    alert(`Perfil "${profileName}" creado correctamente.`);
     loadProfiles(); // Actualizar la lista de perfiles
 }
