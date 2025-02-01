@@ -15,6 +15,7 @@ function startGenerator() {
     const displayTime = parseInt(document.getElementById('displayTime').value);
     const size = parseInt(document.getElementById('size').value);
     const pairs = parseInt(document.getElementById('pairs').value);
+    const mode = document.getElementById('mode').value;
 
     const numbersDiv = document.getElementById('numbers');
     numbersDiv.innerHTML = ''; // Comienza en blanco
@@ -34,9 +35,16 @@ function startGenerator() {
 
             const randomNumbers = [];
             for (let i = 0; i < pairs; i++) {
-                const randomNumber = Math.floor(Math.random() * 100);
-                const formattedNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
-                randomNumbers.push(formattedNumber);
+                let randomNumber;
+                if (mode === "decimal") {
+                    randomNumber = Math.floor(Math.random() * 100);
+                    randomNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
+                } else if (mode === "binary6") {
+                    randomNumber = generateBinary(6); // Genera binario de 6 cifras
+                } else if (mode === "binary8") {
+                    randomNumber = generateBinary(8); // Genera binario de 8 cifras
+                }
+                randomNumbers.push(randomNumber);
             }
             lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
 
@@ -57,6 +65,14 @@ function startGenerator() {
     }
 
     showNextNumber(); // Inicia la secuencia
+}
+
+function generateBinary(length) {
+    let binary = '';
+    for (let i = 0; i < length; i++) {
+        binary += Math.round(Math.random()); // Genera 0 o 1
+    }
+    return binary;
 }
 
 function stopGenerator() {
