@@ -65,6 +65,10 @@ body {
     gap: 10px; /* Espacio entre números simultáneos */
 }
 
+.numbers .number-pair {
+    display: inline-block; /* Muestra los números uno al lado del otro */
+}
+
 .numbers .separator {
     font-size: 24px; /* Tamaño del punto medio */
     margin: 0 10px; /* Espacio alrededor del punto medio */
