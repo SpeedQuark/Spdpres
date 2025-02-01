@@ -76,11 +76,10 @@ function generateBinary(length) {
 }
 
 function formatBinary(binary, groupSize) {
-    let formattedBinary = '';
-    for (let i = 0; i < binary.length; i += groupSize) {
-        formattedBinary += binary.slice(i, i + groupSize) + '<br>'; // Agrega salto de línea
-    }
-    return formattedBinary.trim(); // Elimina el último salto de línea
+    // Divide el binario en dos partes
+    const part1 = binary.slice(0, groupSize); // Primera parte (arriba)
+    const part2 = binary.slice(groupSize); // Segunda parte (abajo)
+    return `${part1}<br>${part2}`; // Une las partes con un salto de línea
 }
 
 function stopGenerator() {
