@@ -35,7 +35,7 @@ function startGenerator() {
             if (!isRunning) return; // Detener si se presionó Stop
 
             if (mode === "matrix") {
-                showMatrix();
+                showMatrix(count + 1); // Pasa el número de la matriz actual
             } else {
                 showNumbers();
             }
@@ -80,11 +80,18 @@ function showNumbers() {
     numbersDiv.style.fontSize = `${size}px`;
 }
 
-function showMatrix() {
+function showMatrix(matrixNumber) {
     const rows = parseInt(document.getElementById('rows').value);
     const cols = parseInt(document.getElementById('cols').value);
     const matrixSize = parseInt(document.getElementById('matrixSize').value);
+    const size = parseInt(document.getElementById('size').value);
     const numbersDiv = document.getElementById('numbers');
+
+    // Crear el número de la matriz
+    const matrixNumberElement = document.createElement('div');
+    matrixNumberElement.className = 'matrix-number';
+    matrixNumberElement.textContent = `Matriz ${matrixNumber}`;
+    matrixNumberElement.style.fontSize = `${size}px`;
 
     // Crear la cuadrícula
     const matrix = document.createElement('div');
@@ -99,7 +106,8 @@ function showMatrix() {
     }
 
     numbersDiv.innerHTML = '';
-    numbersDiv.appendChild(matrix);
+    numbersDiv.appendChild(matrixNumberElement); // Agregar el número de la matriz
+    numbersDiv.appendChild(matrix); // Agregar la matriz
 }
 
 function generateBinary(length) {
