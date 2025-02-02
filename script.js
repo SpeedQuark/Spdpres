@@ -8,18 +8,19 @@ document.getElementById('showLast').addEventListener('click', showLastSeries);
 document.getElementById('mode').addEventListener('change', toggleMatrixControls);
 
 function startGenerator() {
-    if (isRunning) return; // Evita múltiples ejecuciones
+    if (isRunning) return;
     isRunning = true;
+    document.getElementById('start').disabled = true;
 
-    const quantity = parseInt(document.getElementById('quantity').value);
-    const delay = parseInt(document.getElementById('delay').value);
-    const displayTime = parseInt(document.getElementById('displayTime').value);
-    const size = parseInt(document.getElementById('size').value);
-    const pairs = parseInt(document.getElementById('pairs').value);
+    const quantity = Math.max(1, parseInt(document.getElementById('quantity').value));
+    const delay = Math.max(0, parseInt(document.getElementById('delay').value));
+    const displayTime = Math.max(0, parseInt(document.getElementById('displayTime').value));
+    const size = Math.max(10, parseInt(document.getElementById('size').value));
+    const pairs = Math.max(1, parseInt(document.getElementById('pairs').value));
     const mode = document.getElementById('mode').value;
 
     const numbersDiv = document.getElementById('numbers');
-    numbersDiv.innerHTML = ''; // Comienza en blanco
+    numbersDiv.innerHTML = '';
     lastSeries = [];
 
     let count = 0;
@@ -30,26 +31,34 @@ function startGenerator() {
             return;
         }
 
-        // Tiempo en blanco antes de mostrar el número
         timeoutId = setTimeout(() => {
-            if (!isRunning) return; // Detener si se presionó Stop
+            if (!isRunning) return;
 
             if (mode === "matrix") {
-                showMatrix(count + 1, quantity); // Pasa el número de la matriz actual y la cantidad total
+                showMatrix(count + 1); // Solo pasamos el número de la matriz
             } else {
                 showNumbers();
             }
 
-            // Tiempo de visualización del número/matriz
             timeoutId = setTimeout(() => {
-                numbersDiv.innerHTML = ''; // Vuelve a blanco después de mostrar
+                numbersDiv.innerHTML = '';
                 count++;
-                showNextNumber(); // Repite el ciclo
+                showNextNumber();
             }, displayTime);
-        }, delay); // Tiempo en blanco antes de cada número/matriz
+        }, delay);
     }
 
-    showNextNumber(); // Inicia la secuencia
+    showNextNumber();
+}
+
+function generateRandomNumber(mode) {
+    if (mode === "decimal") {
+        return String(Math.floor(Math.random() * 100)).padStart(2, '0');
+    } else if (mode === "binary6") {
+        return formatBinary(generateBinary(6), 3);
+    } else if (mode === "binary8") {
+        return formatBinary(generateBinary(8), 4);
+    }
 }
 
 function showNumbers() {
@@ -58,45 +67,32 @@ function showNumbers() {
     const size = parseInt(document.getElementById('size').value);
     const numbersDiv = document.getElementById('numbers');
 
-    const randomNumbers = [];
-    for (let i = 0; i < pairs; i++) {
-        let randomNumber;
-        if (mode === "decimal") {
-            randomNumber = Math.floor(Math.random() * 100);
-            randomNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
-        } else if (mode === "binary6") {
-            randomNumber = formatBinary(generateBinary(6), 3); // Binario de 6 cifras, formato 3x2
-        } else if (mode === "binary8") {
-            randomNumber = formatBinary(generateBinary(8), 4); // Binario de 8 cifras, formato 4x2
-        }
-        randomNumbers.push(randomNumber);
-    }
-    lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
+    const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
+    lastSeries.push(randomNumbers.join(' • '));
 
-    // Mostrar números simultáneos uno al lado del otro
     numbersDiv.innerHTML = randomNumbers
-        .map((num) => `<div class="number-pair">${num}</div>`) // Cada número en un div
-        .join('<span class="separator"> • </span>'); // Separador con punto medio
+        .map((num) => `<div class="number-pair">${num}</div>`)
+        .join('<span class="separator"> • </span>');
     numbersDiv.style.fontSize = `${size}px`;
 }
 
-function showMatrix(matrixNumber, totalMatrices) {
+function showMatrix(matrixNumber) {
     const rows = parseInt(document.getElementById('rows').value);
     const cols = parseInt(document.getElementById('cols').value);
     const matrixSize = parseInt(document.getElementById('matrixSize').value);
     const size = parseInt(document.getElementById('size').value);
     const numbersDiv = document.getElementById('numbers');
 
+    if (rows <= 0 || cols <= 0) {
+        alert("El número de filas y columnas debe ser mayor que 0.");
+        return;
+    }
+
     // Crear el número de la matriz
     const matrixNumberElement = document.createElement('div');
     matrixNumberElement.className = 'matrix-number';
-    matrixNumberElement.textContent = matrixNumber;
+    matrixNumberElement.textContent = matrixNumber; // Solo mostramos el número
     matrixNumberElement.style.fontSize = `${size}px`;
-
-    // Crear el número de posición
-    const matrixPositionElement = document.createElement('div');
-    matrixPositionElement.className = 'matrix-position';
-    matrixPositionElement.textContent = `${matrixNumber}/${totalMatrices}`;
 
     // Crear la cuadrícula
     const matrix = document.createElement('div');
@@ -106,35 +102,34 @@ function showMatrix(matrixNumber, totalMatrices) {
 
     for (let i = 0; i < rows * cols; i++) {
         const cell = document.createElement('div');
-        cell.className = `cell ${Math.random() < 0.5 ? 'white' : 'blue'}`; // Aleatorio: blanco o azul
+        cell.className = `cell ${Math.random() < 0.5 ? 'white' : 'blue'}`;
         matrix.appendChild(cell);
     }
 
     numbersDiv.innerHTML = '';
     numbersDiv.appendChild(matrixNumberElement); // Agregar el número de la matriz
-    numbersDiv.appendChild(matrixPositionElement); // Agregar el número de posición
     numbersDiv.appendChild(matrix); // Agregar la matriz
 }
 
 function generateBinary(length) {
     let binary = '';
     for (let i = 0; i < length; i++) {
-        binary += Math.round(Math.random()); // Genera 0 o 1
+        binary += Math.round(Math.random());
     }
     return binary;
 }
 
 function formatBinary(binary, groupSize) {
-    // Divide el binario en dos partes
-    const part1 = binary.slice(0, groupSize); // Primera parte (arriba)
-    const part2 = binary.slice(groupSize); // Segunda parte (abajo)
-    return `${part1}<br>${part2}`; // Une las partes con un salto de línea
+    const part1 = binary.slice(0, groupSize);
+    const part2 = binary.slice(groupSize);
+    return `${part1}<br>${part2}`;
 }
 
 function stopGenerator() {
     isRunning = false;
-    clearTimeout(timeoutId); // Detiene todos los timeouts
-    document.getElementById('numbers').innerHTML = ''; // Limpia la pantalla
+    document.getElementById('start').disabled = false;
+    clearTimeout(timeoutId);
+    document.getElementById('numbers').innerHTML = '';
 }
 
 function showLastSeries() {
@@ -158,9 +153,7 @@ function toggleMatrixControls() {
     const mode = document.getElementById('mode').value;
     const matrixControls = document.querySelectorAll('.matrix-controls');
 
-    if (mode === "matrix") {
-        matrixControls.forEach((control) => (control.style.display = 'flex'));
-    } else {
-        matrixControls.forEach((control) => (control.style.display = 'none'));
-    }
+    matrixControls.forEach((control) => {
+        control.style.display = mode === "matrix" ? 'flex' : 'none';
+    });
 }
