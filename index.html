@@ -10,53 +10,14 @@
     <div class="container">
         <!-- Controles principales -->
         <div class="controls">
-            <div class="control-group">
-                <label for="mode">Modo:</label>
-                <select id="mode">
-                    <option value="decimal">Decimales</option>
-                    <option value="binary6">Binarios6</option>
-                    <option value="binary8">Binarios8</option>
-                    <option value="matrix">Matrices</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="quantity">Cantidad de números:</label>
-                <input type="number" id="quantity" min="1" value="10">
-            </div>
-            <div class="control-group">
-                <label for="delay">Tiempo entre números (ms):</label>
-                <input type="number" id="delay" min="0" value="150">
-            </div>
-            <div class="control-group">
-                <label for="displayTime">Tiempo de visualización (ms):</label>
-                <input type="number" id="displayTime" min="0" value="150">
-            </div>
-            <div class="control-group">
-                <label for="size">Tamaño de los números (px):</label>
-                <input type="number" id="size" min="10" value="50">
-            </div>
-            <div class="control-group">
-                <label for="pairs">Números pares simultáneos:</label>
-                <input type="number" id="pairs" min="1" value="1">
-            </div>
-            <!-- Controles específicos para matrices -->
-            <div class="control-group matrix-controls">
-                <label for="rows">Filas:</label>
-                <input type="number" id="rows" min="1" value="2">
-            </div>
-            <div class="control-group matrix-controls">
-                <label for="cols">Columnas:</label>
-                <input type="number" id="cols" min="1" value="2">
-            </div>
-            <div class="control-group matrix-controls">
-                <label for="matrixSize">Tamaño de celda (px):</label>
-                <input type="number" id="matrixSize" min="10" value="50">
-            </div>
+            <!-- ... (tus controles existentes) ... -->
         </div>
 
         <!-- Área de números/matrices -->
         <div class="numbers-container">
-            <div class="numbers" id="numbers"></div>
+            <div class="numbers" id="numbers">
+                <!-- El número de la matriz y la matriz se insertarán aquí -->
+            </div>
         </div>
 
         <!-- Botones de control -->
