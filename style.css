@@ -3,6 +3,7 @@
     font-size: 24px;
     margin-bottom: 10px;
     text-align: center; /* Centrar el número */
+    width: 100%; /* Ocupar todo el ancho */
 }
 
 /* Estilos para la matriz */
