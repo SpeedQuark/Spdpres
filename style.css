@@ -1,150 +1,32 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f0f0;
+/* Estilos para el número de la matriz */
+.matrix-number {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center; /* Centrar el número */
 }
 
-.container {
-    text-align: center;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 90%;
-    max-width: 800px; /* Más ancho para pantallas grandes */
-    margin: 20px;
-}
-
-.controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.control-group {
-    flex: 1 1 calc(33.33% - 15px); /* Tres por renglón */
-    display: flex;
-    flex-direction: column;
-}
-
-.control-group label {
-    font-size: 14px;
-    margin-bottom: 5px;
-}
-
-.control-group input,
-.control-group select {
-    width: 100%;
-    padding: 8px;
-    font-size: 14px;
-    box-sizing: border-box;
-}
-
-.matrix-controls {
-    display: none; /* Ocultar controles de matrices por defecto */
-}
-
-.numbers-container {
-    margin: 20px 0;
-    height: 400px; /* Más espacio para números/matrices */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* Evita que los números se salgan del contenedor */
-}
-
-.numbers {
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    gap: 10px; /* Espacio entre números simultáneos */
-}
-
-.numbers .number-pair {
-    display: inline-block; /* Muestra los números uno al lado del otro */
-}
-
-.numbers .separator {
-    font-size: 24px; /* Tamaño del punto medio */
-    margin: 0 10px; /* Espacio alrededor del punto medio */
-}
-
+/* Estilos para la matriz */
 .matrix {
     display: grid;
-    border: 2px solid #888; /* Borde gris alrededor de toda la matriz */
+    border: 2px solid #888;
+    background-color: #f9f9f9;
+    margin: 0 auto; /* Centrar la matriz */
 }
 
 .matrix .cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #000; /* Borde negro en cada celda */
+    border: 1px solid #000;
+    font-size: 14px;
 }
 
 .matrix .cell.white {
     background-color: #fff;
+    color: #000;
 }
 
 .matrix .cell.blue {
-    background-color: #0056b3; /* Azul más fuerte */
+    background-color: #0056b3;
     color: #fff;
-}
-
-.matrix-number {
-    font-size: 24px; /* Tamaño del número de la matriz */
-    margin-bottom: 10px; /* Espacio entre el número y la matriz */
-}
-
-.matrix-position {
-    font-size: 18px; /* Tamaño del número de posición */
-    margin-bottom: 5px; /* Espacio entre el número de posición y la matriz */
-}
-
-.buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 20px; /* Más espacio entre los números y los botones */
-}
-
-.buttons button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    flex: 1;
-}
-
-/* Estilos para dispositivos móviles */
-@media (max-width: 600px) {
-    .container {
-        padding: 10px;
-    }
-
-    .control-group {
-        flex: 1 1 calc(50% - 10px); /* Dos por renglón en móviles */
-    }
-
-    .control-group label {
-        font-size: 12px;
-    }
-
-    .control-group input,
-    .control-group select {
-        font-size: 12px;
-        padding: 6px;
-    }
-
-    .buttons button {
-        padding: 8px 16px;
-        font-size: 14px;
-    }
 }
