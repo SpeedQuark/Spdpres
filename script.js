@@ -94,7 +94,7 @@ function showMatrix() {
 
     for (let i = 0; i < rows * cols; i++) {
         const cell = document.createElement('div');
-        cell.className = `cell ${i % 2 === 0 ? 'white' : 'blue'}`;
+        cell.className = `cell ${Math.random() < 0.5 ? 'white' : 'blue'}`; // Aleatorio: blanco o azul
         matrix.appendChild(cell);
     }
 
