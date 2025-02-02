@@ -5,6 +5,7 @@ let isRunning = false;
 document.getElementById('start').addEventListener('click', startGenerator);
 document.getElementById('stop').addEventListener('click', stopGenerator);
 document.getElementById('showLast').addEventListener('click', showLastSeries);
+document.getElementById('mode').addEventListener('change', toggleMatrixControls);
 
 function startGenerator() {
     if (isRunning) return; // Evita múltiples ejecuciones
@@ -33,37 +34,72 @@ function startGenerator() {
         timeoutId = setTimeout(() => {
             if (!isRunning) return; // Detener si se presionó Stop
 
-            const randomNumbers = [];
-            for (let i = 0; i < pairs; i++) {
-                let randomNumber;
-                if (mode === "decimal") {
-                    randomNumber = Math.floor(Math.random() * 100);
-                    randomNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
-                } else if (mode === "binary6") {
-                    randomNumber = formatBinary(generateBinary(6), 3); // Binario de 6 cifras, formato 3x2
-                } else if (mode === "binary8") {
-                    randomNumber = formatBinary(generateBinary(8), 4); // Binario de 8 cifras, formato 4x2
-                }
-                randomNumbers.push(randomNumber);
+            if (mode === "matrix") {
+                showMatrix();
+            } else {
+                showNumbers();
             }
-            lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
 
-            // Mostrar números simultáneos uno al lado del otro
-            numbersDiv.innerHTML = randomNumbers
-                .map((num) => `<div class="number-pair">${num}</div>`) // Cada número en un div
-                .join('<span class="separator"> • </span>'); // Separador con punto medio
-            numbersDiv.style.fontSize = `${size}px`;
-
-            // Tiempo de visualización del número
+            // Tiempo de visualización del número/matriz
             timeoutId = setTimeout(() => {
-                numbersDiv.innerHTML = ''; // Vuelve a blanco después de mostrar el número
+                numbersDiv.innerHTML = ''; // Vuelve a blanco después de mostrar
                 count++;
                 showNextNumber(); // Repite el ciclo
             }, displayTime);
-        }, delay); // Tiempo en blanco antes de cada número
+        }, delay); // Tiempo en blanco antes de cada número/matriz
     }
 
     showNextNumber(); // Inicia la secuencia
+}
+
+function showNumbers() {
+    const mode = document.getElementById('mode').value;
+    const pairs = parseInt(document.getElementById('pairs').value);
+    const size = parseInt(document.getElementById('size').value);
+    const numbersDiv = document.getElementById('numbers');
+
+    const randomNumbers = [];
+    for (let i = 0; i < pairs; i++) {
+        let randomNumber;
+        if (mode === "decimal") {
+            randomNumber = Math.floor(Math.random() * 100);
+            randomNumber = String(randomNumber).padStart(2, '0'); // Formato de 2 dígitos
+        } else if (mode === "binary6") {
+            randomNumber = formatBinary(generateBinary(6), 3); // Binario de 6 cifras, formato 3x2
+        } else if (mode === "binary8") {
+            randomNumber = formatBinary(generateBinary(8), 4); // Binario de 8 cifras, formato 4x2
+        }
+        randomNumbers.push(randomNumber);
+    }
+    lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
+
+    // Mostrar números simultáneos uno al lado del otro
+    numbersDiv.innerHTML = randomNumbers
+        .map((num) => `<div class="number-pair">${num}</div>`) // Cada número en un div
+        .join('<span class="separator"> • </span>'); // Separador con punto medio
+    numbersDiv.style.fontSize = `${size}px`;
+}
+
+function showMatrix() {
+    const rows = parseInt(document.getElementById('rows').value);
+    const cols = parseInt(document.getElementById('cols').value);
+    const matrixSize = parseInt(document.getElementById('matrixSize').value);
+    const numbersDiv = document.getElementById('numbers');
+
+    // Crear la cuadrícula
+    const matrix = document.createElement('div');
+    matrix.className = 'matrix';
+    matrix.style.gridTemplateColumns = `repeat(${cols}, ${matrixSize}px)`;
+    matrix.style.gridTemplateRows = `repeat(${rows}, ${matrixSize}px)`;
+
+    for (let i = 0; i < rows * cols; i++) {
+        const cell = document.createElement('div');
+        cell.className = `cell ${i % 2 === 0 ? 'white' : 'blue'}`;
+        matrix.appendChild(cell);
+    }
+
+    numbersDiv.innerHTML = '';
+    numbersDiv.appendChild(matrix);
 }
 
 function generateBinary(length) {
@@ -89,4 +125,15 @@ function stopGenerator() {
 
 function showLastSeries() {
     alert(`Última serie:\n${lastSeries.join('\n')}`);
+}
+
+function toggleMatrixControls() {
+    const mode = document.getElementById('mode').value;
+    const matrixControls = document.querySelectorAll('.matrix-controls');
+
+    if (mode === "matrix") {
+        matrixControls.forEach((control) => (control.style.display = 'flex'));
+    } else {
+        matrixControls.forEach((control) => (control.style.display = 'none'));
+    }
 }
