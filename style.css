@@ -4,7 +4,6 @@
     margin-bottom: 10px;
     text-align: center; /* Centrar el número */
     width: 100%; /* Ocupar todo el ancho */
-    display: block; /* Asegurar que ocupe su propia línea */
 }
 
 /* Estilos para la matriz */
@@ -31,15 +30,4 @@
 .matrix .cell.blue {
     background-color: #0056b3;
     color: #fff;
-}
-
-/* Contenedor de números/matrices */
-.numbers-container {
-    display: flex;
-    flex-direction: column; /* Apilar elementos verticalmente */
-    align-items: center; /* Centrar horizontalmente */
-    justify-content: center; /* Centrar verticalmente */
-    margin: 20px 0;
-    height: 400px;
-    overflow: hidden;
 }
