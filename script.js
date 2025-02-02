@@ -1,4 +1,4 @@
- function showNextNumber() {
+function showNextNumber() {
     if (count >= quantity || !isRunning) {
         stopGenerator();
         return;
@@ -35,5 +35,5 @@
             count++;
             showNextNumber(); // Repite el ciclo
         }, displayTime);
-    }, delay); // Tiempo en blanco inicial
- }
+    }, delay); // Tiempo en blanco antes de cada número
+}
