@@ -35,7 +35,7 @@ function startGenerator() {
             if (!isRunning) return;
 
             if (mode === "matrix") {
-                showMatrix(count + 1); // Solo pasamos el número de la matriz
+                showMatrix(count + 1);
             } else {
                 showNumbers();
             }
@@ -68,7 +68,7 @@ function showNumbers() {
     const numbersDiv = document.getElementById('numbers');
 
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
-    lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
+    lastSeries.push(randomNumbers.join(' • '));
 
     numbersDiv.innerHTML = randomNumbers
         .map((num) => `<div class="number-pair">${num}</div>`)
@@ -91,9 +91,8 @@ function showMatrix(matrixNumber) {
     // Crear el número de la matriz (arriba)
     const matrixNumberElement = document.createElement('div');
     matrixNumberElement.className = 'matrix-number';
-    matrixNumberElement.textContent = matrixNumber; // Solo mostramos el número
+    matrixNumberElement.textContent = matrixNumber;
     matrixNumberElement.style.fontSize = `${size}px`;
-    matrixNumberElement.style.textAlign = 'center'; // Centrar el número
 
     // Crear la cuadrícula
     const matrix = document.createElement('div');
@@ -104,18 +103,19 @@ function showMatrix(matrixNumber) {
     // Guardar la matriz en la última serie
     const matrixData = [];
     for (let i = 0; i < rows * cols; i++) {
-        const cellValue = Math.random() < 0.5 ? '0' : '1'; // 0 = blanco, 1 = azul
+        const cellValue = Math.random() < 0.5 ? '0' : '1';
         matrixData.push(cellValue);
 
         const cell = document.createElement('div');
         cell.className = `cell ${cellValue === '1' ? 'blue' : 'white'}`;
         matrix.appendChild(cell);
     }
-    lastSeries.push(matrixData.join('')); // Guardar la matriz como cadena de 0s y 1s
+    lastSeries.push(matrixData.join(''));
 
+    // Limpiar y agregar elementos al contenedor
     numbersDiv.innerHTML = '';
-    numbersDiv.appendChild(matrixNumberElement); // Agregar el número de la matriz (arriba)
-    numbersDiv.appendChild(matrix); // Agregar la matriz
+    numbersDiv.appendChild(matrixNumberElement); // Número de la matriz (arriba)
+    numbersDiv.appendChild(matrix); // Matriz
 }
 
 function generateBinary(length) {
@@ -144,12 +144,10 @@ function showLastSeries() {
     let message = '';
 
     if (mode === "matrix") {
-        // Mostrar matrices en 0s y 1s
         message = lastSeries
             .map((series, index) => `Matriz ${index + 1}:\n${series.match(/.{1,2}/g).join(' ')}`)
             .join('\n\n');
     } else {
-        // Mostrar números decimales o binarios
         message = lastSeries.join('\n');
     }
 
