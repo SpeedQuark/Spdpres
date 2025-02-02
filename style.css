@@ -80,8 +80,7 @@ body {
 
 .matrix {
     display: grid;
-    gap: 2px; /* Espacio entre celdas */
-    border: 2px solid #000; /* Borde alrededor de toda la matriz */
+    border: 2px solid #888; /* Borde gris alrededor de toda la matriz */
 }
 
 .matrix .cell {
@@ -96,13 +95,18 @@ body {
 }
 
 .matrix .cell.blue {
-    background-color: #007bff;
+    background-color: #0056b3; /* Azul más fuerte */
     color: #fff;
 }
 
 .matrix-number {
     font-size: 24px; /* Tamaño del número de la matriz */
     margin-bottom: 10px; /* Espacio entre el número y la matriz */
+}
+
+.matrix-position {
+    font-size: 18px; /* Tamaño del número de posición */
+    margin-bottom: 5px; /* Espacio entre el número de posición y la matriz */
 }
 
 .buttons {
