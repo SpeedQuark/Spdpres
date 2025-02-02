@@ -35,7 +35,7 @@ function startGenerator() {
             if (!isRunning) return; // Detener si se presionó Stop
 
             if (mode === "matrix") {
-                showMatrix(count + 1); // Pasa el número de la matriz actual
+                showMatrix(count + 1, quantity); // Pasa el número de la matriz actual y la cantidad total
             } else {
                 showNumbers();
             }
@@ -80,7 +80,7 @@ function showNumbers() {
     numbersDiv.style.fontSize = `${size}px`;
 }
 
-function showMatrix(matrixNumber) {
+function showMatrix(matrixNumber, totalMatrices) {
     const rows = parseInt(document.getElementById('rows').value);
     const cols = parseInt(document.getElementById('cols').value);
     const matrixSize = parseInt(document.getElementById('matrixSize').value);
@@ -90,8 +90,13 @@ function showMatrix(matrixNumber) {
     // Crear el número de la matriz
     const matrixNumberElement = document.createElement('div');
     matrixNumberElement.className = 'matrix-number';
-    matrixNumberElement.textContent = `Matriz ${matrixNumber}`;
+    matrixNumberElement.textContent = matrixNumber;
     matrixNumberElement.style.fontSize = `${size}px`;
+
+    // Crear el número de posición
+    const matrixPositionElement = document.createElement('div');
+    matrixPositionElement.className = 'matrix-position';
+    matrixPositionElement.textContent = `${matrixNumber}/${totalMatrices}`;
 
     // Crear la cuadrícula
     const matrix = document.createElement('div');
@@ -107,6 +112,7 @@ function showMatrix(matrixNumber) {
 
     numbersDiv.innerHTML = '';
     numbersDiv.appendChild(matrixNumberElement); // Agregar el número de la matriz
+    numbersDiv.appendChild(matrixPositionElement); // Agregar el número de posición
     numbersDiv.appendChild(matrix); // Agregar la matriz
 }
 
@@ -132,7 +138,20 @@ function stopGenerator() {
 }
 
 function showLastSeries() {
-    alert(`Última serie:\n${lastSeries.join('\n')}`);
+    const binarySeries = lastSeries.map((series) =>
+        series
+            .split(' • ')
+            .map((num) =>
+                num
+                    .replace(/<br>/g, '') // Eliminar saltos de línea
+                    .split('')
+                    .map((char) => (char === '1' ? '1' : '0')) // Azul = 1, Blanco = 0
+                    .join('')
+            )
+            .join(' • ')
+    );
+
+    alert(`Última serie en binarios:\n${binarySeries.join('\n')}`);
 }
 
 function toggleMatrixControls() {
