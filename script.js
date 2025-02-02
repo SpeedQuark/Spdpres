@@ -68,7 +68,7 @@ function showNumbers() {
     const numbersDiv = document.getElementById('numbers');
 
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
-    lastSeries.push(randomNumbers.join(' • '));
+    lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
 
     numbersDiv.innerHTML = randomNumbers
         .map((num) => `<div class="number-pair">${num}</div>`)
@@ -88,11 +88,12 @@ function showMatrix(matrixNumber) {
         return;
     }
 
-    // Crear el número de la matriz
+    // Crear el número de la matriz (arriba)
     const matrixNumberElement = document.createElement('div');
     matrixNumberElement.className = 'matrix-number';
     matrixNumberElement.textContent = matrixNumber; // Solo mostramos el número
     matrixNumberElement.style.fontSize = `${size}px`;
+    matrixNumberElement.style.textAlign = 'center'; // Centrar el número
 
     // Crear la cuadrícula
     const matrix = document.createElement('div');
@@ -100,14 +101,20 @@ function showMatrix(matrixNumber) {
     matrix.style.gridTemplateColumns = `repeat(${cols}, ${matrixSize}px)`;
     matrix.style.gridTemplateRows = `repeat(${rows}, ${matrixSize}px)`;
 
+    // Guardar la matriz en la última serie
+    const matrixData = [];
     for (let i = 0; i < rows * cols; i++) {
+        const cellValue = Math.random() < 0.5 ? '0' : '1'; // 0 = blanco, 1 = azul
+        matrixData.push(cellValue);
+
         const cell = document.createElement('div');
-        cell.className = `cell ${Math.random() < 0.5 ? 'white' : 'blue'}`;
+        cell.className = `cell ${cellValue === '1' ? 'blue' : 'white'}`;
         matrix.appendChild(cell);
     }
+    lastSeries.push(matrixData.join('')); // Guardar la matriz como cadena de 0s y 1s
 
     numbersDiv.innerHTML = '';
-    numbersDiv.appendChild(matrixNumberElement); // Agregar el número de la matriz
+    numbersDiv.appendChild(matrixNumberElement); // Agregar el número de la matriz (arriba)
     numbersDiv.appendChild(matrix); // Agregar la matriz
 }
 
@@ -133,20 +140,20 @@ function stopGenerator() {
 }
 
 function showLastSeries() {
-    const binarySeries = lastSeries.map((series) =>
-        series
-            .split(' • ')
-            .map((num) =>
-                num
-                    .replace(/<br>/g, '') // Eliminar saltos de línea
-                    .split('')
-                    .map((char) => (char === '1' ? '1' : '0')) // Azul = 1, Blanco = 0
-                    .join('')
-            )
-            .join(' • ')
-    );
+    const mode = document.getElementById('mode').value;
+    let message = '';
 
-    alert(`Última serie en binarios:\n${binarySeries.join('\n')}`);
+    if (mode === "matrix") {
+        // Mostrar matrices en 0s y 1s
+        message = lastSeries
+            .map((series, index) => `Matriz ${index + 1}:\n${series.match(/.{1,2}/g).join(' ')}`)
+            .join('\n\n');
+    } else {
+        // Mostrar números decimales o binarios
+        message = lastSeries.join('\n');
+    }
+
+    alert(`Última serie:\n${message}`);
 }
 
 function toggleMatrixControls() {
