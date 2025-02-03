@@ -2,16 +2,15 @@ let timeoutId;
 let lastSeries = [];
 let isRunning = false;
 
-// Lista de números correspondientes a las imágenes en la carpeta "figuras"
-const existingFigures = ['00', '01', '02', '03', '04', '05']; // Ejemplo: Solo estas imágenes existen
-
 document.getElementById('start').addEventListener('click', startGenerator);
 document.getElementById('stop').addEventListener('click', stopGenerator);
 document.getElementById('showLast').addEventListener('click', showLastSeries);
+document.getElementById('exportLast').addEventListener('click', exportLastSeries);
 document.getElementById('mode').addEventListener('change', toggleMatrixControls);
 
 function startGenerator() {
     if (isRunning) return;
+    if (!validateInputs()) return;
     isRunning = true;
     document.getElementById('start').disabled = true;
 
@@ -40,7 +39,7 @@ function startGenerator() {
             if (mode === "matrix") {
                 showMatrix(count + 1);
             } else if (mode === "figures") {
-                showFigures(size); // Pasar el tamaño como parámetro
+                showFigures(size);
             } else {
                 showNumbers();
             }
@@ -56,26 +55,6 @@ function startGenerator() {
     showNextNumber();
 }
 
-function showFigures(size) {
-    const numbersDiv = document.getElementById('numbers');
-
-    // Seleccionar un número aleatorio de la lista de figuras existentes
-    const randomNumber = existingFigures[Math.floor(Math.random() * existingFigures.length)];
-
-    // Crear la imagen
-    const imgElement = document.createElement('img');
-    imgElement.src = `figuras/${randomNumber}.png`; // Ruta de la imagen
-    imgElement.alt = `Figura ${randomNumber}`;
-    imgElement.style.width = `${size}px`; // Tamaño de la imagen
-
-    // Guardar la figura en la última serie
-    lastSeries.push(randomNumber);
-
-    // Mostrar la figura
-    numbersDiv.innerHTML = '';
-    numbersDiv.appendChild(imgElement);
-}
-
 function showNumbers() {
     const mode = document.getElementById('mode').value;
     const pairs = parseInt(document.getElementById('pairs').value);
@@ -83,12 +62,39 @@ function showNumbers() {
     const numbersDiv = document.getElementById('numbers');
 
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
-    lastSeries.push(randomNumbers.join(' • '));
+    lastSeries.push(randomNumbers.join(' '));
 
     numbersDiv.innerHTML = randomNumbers
-        .map((num) => `<div class="number-pair">${num}</div>`)
-        .join('<span class="separator"> • </span>');
+        .map((num) => `<span class="number-pair">${num}</span>`)
+        .join(' ');
     numbersDiv.style.fontSize = `${size}px`;
+    numbersDiv.style.display = 'flex';
+    numbersDiv.style.gap = '10px';
+}
+
+function showFigures(size) {
+    const numbersDiv = document.getElementById('numbers');
+
+    // Generar un número aleatorio entre 0 y 99, omitiendo del 10 al 29
+    let randomNumber;
+    do {
+        randomNumber = Math.floor(Math.random() * 100);
+    } while (randomNumber >= 10 && randomNumber <= 29); // Omitir del 10 al 29
+
+    randomNumber = String(randomNumber).padStart(2, '0'); // Formatear a 2 dígitos
+
+    // Crear la imagen
+    const imgElement = document.createElement('img');
+    imgElement.src = `figuras/${randomNumber}.png`;
+    imgElement.alt = `Figura ${randomNumber}`;
+    imgElement.style.width = `${size}px`;
+
+    // Guardar la figura en la última serie
+    lastSeries.push(randomNumber);
+
+    // Mostrar la figura
+    numbersDiv.innerHTML = '';
+    numbersDiv.appendChild(imgElement);
 }
 
 function showMatrix(matrixNumber) {
@@ -108,7 +114,6 @@ function showMatrix(matrixNumber) {
     matrixNumberElement.className = 'matrix-number';
     matrixNumberElement.textContent = matrixNumber;
     matrixNumberElement.style.fontSize = `${size}px`;
-    matrixNumberElement.style.textAlign = 'center'; // Centrar el número
 
     // Crear la cuadrícula
     const matrix = document.createElement('div');
@@ -126,21 +131,21 @@ function showMatrix(matrixNumber) {
         cell.className = `cell ${cellValue === '1' ? 'blue' : 'white'}`;
         matrix.appendChild(cell);
     }
-    lastSeries.push({ data: matrixData.join(''), cols }); // Guardar la matriz y el número de columnas
+    lastSeries.push({ data: matrixData.join(''), cols });
 
     // Limpiar y agregar elementos al contenedor
     numbersDiv.innerHTML = '';
-    numbersDiv.appendChild(matrixNumberElement); // Agregar el número de la matriz (arriba)
-    numbersDiv.appendChild(matrix); // Agregar la matriz
+    numbersDiv.appendChild(matrixNumberElement);
+    numbersDiv.appendChild(matrix);
 }
 
 function generateRandomNumber(mode) {
     if (mode === "decimal") {
         return String(Math.floor(Math.random() * 100)).padStart(2, '0');
     } else if (mode === "binary6") {
-        return formatBinary(generateBinary(6), 3);
+        return formatBinary(generateBinary(6), 3); // Mantener saltos de línea
     } else if (mode === "binary8") {
-        return formatBinary(generateBinary(8), 4);
+        return formatBinary(generateBinary(8), 4); // Mantener saltos de línea
     }
 }
 
@@ -155,7 +160,7 @@ function generateBinary(length) {
 function formatBinary(binary, groupSize) {
     const part1 = binary.slice(0, groupSize);
     const part2 = binary.slice(groupSize);
-    return `${part1}<br>${part2}`;
+    return `${part1}<br>${part2}`; // Mantener el salto de línea
 }
 
 function stopGenerator() {
@@ -170,25 +175,54 @@ function showLastSeries() {
     let message = '';
 
     if (mode === "matrix") {
-        // Mostrar matrices en 0s y 1s con espacios según las columnas
         message = lastSeries
             .map((series, index) => {
                 const { data, cols } = series;
                 const formattedData = data
-                    .match(new RegExp(`.{1,${cols}}`, 'g')) // Dividir en grupos según las columnas
-                    .join('\n'); // Unir con saltos de línea
+                    .match(new RegExp(`.{1,${cols}}`, 'g'))
+                    .join('\n');
                 return `Matriz ${index + 1}:\n${formattedData}`;
             })
             .join('\n\n');
     } else if (mode === "figures") {
-        // Mostrar la última serie de figuras
         message = lastSeries.join('\n');
     } else {
-        // Mostrar números decimales o binarios
         message = lastSeries.join('\n');
     }
 
     alert(`Última serie:\n${message}`);
+}
+
+function exportLastSeries() {
+    if (lastSeries.length === 0) {
+        alert("No hay ninguna serie generada para exportar.");
+        return;
+    }
+
+    const mode = document.getElementById('mode').value;
+    let content = '';
+
+    if (mode === "matrix") {
+        content = lastSeries
+            .map((series, index) => {
+                const { data, cols } = series;
+                const formattedData = data
+                    .match(new RegExp(`.{1,${cols}}`, 'g'))
+                    .join('\n');
+                return `Matriz ${index + 1}:\n${formattedData}`;
+            })
+            .join('\n\n');
+    } else {
+        content = lastSeries.join('\n');
+    }
+
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `serie_${new Date().toISOString()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
 }
 
 function toggleMatrixControls() {
@@ -198,4 +232,34 @@ function toggleMatrixControls() {
     matrixControls.forEach((control) => {
         control.style.display = mode === "matrix" ? 'flex' : 'none';
     });
+}
+
+function validateInputs() {
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const delay = parseInt(document.getElementById('delay').value);
+    const displayTime = parseInt(document.getElementById('displayTime').value);
+    const size = parseInt(document.getElementById('size').value);
+    const pairs = parseInt(document.getElementById('pairs').value);
+
+    if (isNaN(quantity) || quantity <= 0) {
+        alert("La cantidad de números debe ser mayor que 0.");
+        return false;
+    }
+    if (isNaN(delay) || delay < 0) {
+        alert("El tiempo entre números no puede ser negativo.");
+        return false;
+    }
+    if (isNaN(displayTime) || displayTime < 0) {
+        alert("El tiempo de visualización no puede ser negativo.");
+        return false;
+    }
+    if (isNaN(size) || size < 10) {
+        alert("El tamaño de los números debe ser al menos 10px.");
+        return false;
+    }
+    if (isNaN(pairs) || pairs <= 0) {
+        alert("El número de pares simultáneos debe ser mayor que 0.");
+        return false;
+    }
+    return true;
 }
