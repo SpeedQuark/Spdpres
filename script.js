@@ -68,7 +68,7 @@ function showNumbers() {
     const numbersDiv = document.getElementById('numbers');
 
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
-    lastSeries.push(randomNumbers.join(' • '));
+    lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
 
     numbersDiv.innerHTML = randomNumbers
         .map((num) => `<div class="number-pair">${num}</div>`)
@@ -157,7 +157,7 @@ function showLastSeries() {
             .join('\n\n');
     } else {
         // Mostrar números decimales o binarios
-        message = lastSeries.map((series) => series.data).join('\n');
+        message = lastSeries.join('\n');
     }
 
     alert(`Última serie:\n${message}`);
