@@ -16,7 +16,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 90%;
-    max-width: 800px; /* Más ancho para pantallas grandes */
+    max-width: 800px;
     margin: 20px;
 }
 
@@ -28,7 +28,7 @@ body {
 }
 
 .control-group {
-    flex: 1 1 calc(33.33% - 15px); /* Tres por renglón */
+    flex: 1 1 calc(33.33% - 15px);
     display: flex;
     flex-direction: column;
 }
@@ -44,19 +44,22 @@ body {
     padding: 8px;
     font-size: 14px;
     box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .matrix-controls {
-    display: none; /* Ocultar controles de matrices por defecto */
+    display: none;
 }
 
 .numbers-container {
     margin: 20px 0;
-    height: 400px; /* Más espacio para números/matrices */
+    height: 400px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Evita que los números se salgan del contenedor */
+    overflow: hidden;
 }
 
 .numbers {
@@ -66,28 +69,29 @@ body {
     align-items: center;
     width: 100%;
     height: 100%;
-    gap: 10px; /* Espacio entre números simultáneos */
+    gap: 10px;
 }
 
 .numbers .number-pair {
-    display: inline-block; /* Muestra los números uno al lado del otro */
+    display: inline-block;
 }
 
 .numbers .separator {
-    font-size: 24px; /* Tamaño del punto medio */
-    margin: 0 10px; /* Espacio alrededor del punto medio */
+    font-size: 24px;
+    margin: 0 10px;
 }
 
 .matrix {
     display: grid;
-    border: 2px solid #888; /* Borde gris alrededor de toda la matriz */
+    border: 2px solid #888;
+    background-color: #f9f9f9;
 }
 
 .matrix .cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #000; /* Borde negro en cada celda */
+    border: 1px solid #000;
 }
 
 .matrix .cell.white {
@@ -95,25 +99,22 @@ body {
 }
 
 .matrix .cell.blue {
-    background-color: #0056b3; /* Azul más fuerte */
+    background-color: #0056b3;
     color: #fff;
 }
 
 .matrix-number {
-    font-size: 24px; /* Tamaño del número de la matriz */
-    margin-bottom: 10px; /* Espacio entre el número y la matriz */
-}
-
-.matrix-position {
-    font-size: 18px; /* Tamaño del número de posición */
-    margin-bottom: 5px; /* Espacio entre el número de posición y la matriz */
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+    width: 100%;
 }
 
 .buttons {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    margin-top: 20px; /* Más espacio entre los números y los botones */
+    margin-top: 20px;
 }
 
 .buttons button {
@@ -121,16 +122,33 @@ body {
     font-size: 16px;
     cursor: pointer;
     flex: 1;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s ease;
 }
 
-/* Estilos para dispositivos móviles */
+.buttons button:hover {
+    background-color: #0056b3;
+}
+
+.buttons button:active {
+    background-color: #004080;
+}
+
+.buttons button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 @media (max-width: 600px) {
     .container {
         padding: 10px;
     }
 
     .control-group {
-        flex: 1 1 calc(50% - 10px); /* Dos por renglón en móviles */
+        flex: 1 1 calc(50% - 10px);
     }
 
     .control-group label {
