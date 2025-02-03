@@ -1,1 +1,45 @@
+/* Estilos para figuras geométricas */
+.figure {
+    display: inline-block;
+    margin: 5px;
+}
 
+.circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.square {
+    width: 50px;
+    height: 50px;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 50px solid;
+}
+
+/* Colores para las figuras */
+.red {
+    background-color: red;
+}
+
+.blue {
+    background-color: blue;
+}
+
+.green {
+    background-color: green;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.purple {
+    background-color: purple;
+}
