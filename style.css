@@ -65,21 +65,16 @@ body {
 .numbers {
     font-weight: bold;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
-    gap: 10px;
 }
 
 .numbers .number-pair {
     display: inline-block;
-}
-
-.numbers .separator {
-    font-size: 24px;
-    margin: 0 10px;
 }
 
 .matrix {
@@ -93,6 +88,7 @@ body {
     justify-content: center;
     align-items: center;
     border: 1px solid #000;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 .matrix .cell.white {
@@ -141,6 +137,20 @@ body {
 .buttons button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+.history-container {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @media (max-width: 600px) {
