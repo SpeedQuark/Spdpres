@@ -2,6 +2,9 @@ let timeoutId;
 let lastSeries = [];
 let isRunning = false;
 
+// Lista de números correspondientes a las imágenes en la carpeta "figuras"
+const existingFigures = Array.from({ length: 100 }, (_, i) => String(i).padStart(2, '0')); // Ejemplo: 00, 01, ..., 99
+
 document.getElementById('start').addEventListener('click', startGenerator);
 document.getElementById('stop').addEventListener('click', stopGenerator);
 document.getElementById('showLast').addEventListener('click', showLastSeries);
@@ -37,7 +40,7 @@ function startGenerator() {
             if (mode === "matrix") {
                 showMatrix(count + 1);
             } else if (mode === "figures") {
-                showFigures();
+                showFigures(size); // Pasar el tamaño como parámetro
             } else {
                 showNumbers();
             }
@@ -53,11 +56,11 @@ function startGenerator() {
     showNextNumber();
 }
 
-function showFigures() {
+function showFigures(size) {
     const numbersDiv = document.getElementById('numbers');
 
-    // Generar un número aleatorio entre 00 y 99
-    const randomNumber = String(Math.floor(Math.random() * 100)).padStart(2, '0');
+    // Seleccionar un número aleatorio de la lista de figuras existentes
+    const randomNumber = existingFigures[Math.floor(Math.random() * existingFigures.length)];
 
     // Crear la imagen
     const imgElement = document.createElement('img');
