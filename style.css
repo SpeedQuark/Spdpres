@@ -88,7 +88,6 @@ body {
     justify-content: center;
     align-items: center;
     border: 1px solid #000;
-    animation: fadeIn 0.5s ease-in-out;
 }
 
 .matrix .cell.white {
@@ -146,11 +145,6 @@ body {
     border-radius: 5px;
     max-height: 200px;
     overflow-y: auto;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
 }
 
 @media (max-width: 600px) {
