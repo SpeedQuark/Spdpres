@@ -81,6 +81,7 @@ body {
     display: grid;
     border: 2px solid #888;
     background-color: #f9f9f9;
+    margin-top: 10px; /* Espacio entre el número y la matriz */
 }
 
 .matrix .cell {
