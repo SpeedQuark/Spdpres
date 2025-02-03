@@ -93,6 +93,7 @@ function showMatrix(matrixNumber) {
     matrixNumberElement.className = 'matrix-number';
     matrixNumberElement.textContent = matrixNumber;
     matrixNumberElement.style.fontSize = `${size}px`;
+    matrixNumberElement.style.textAlign = 'center'; // Centrar el número
 
     // Crear la cuadrícula
     const matrix = document.createElement('div');
@@ -110,12 +111,12 @@ function showMatrix(matrixNumber) {
         cell.className = `cell ${cellValue === '1' ? 'blue' : 'white'}`;
         matrix.appendChild(cell);
     }
-    lastSeries.push(matrixData.join(''));
+    lastSeries.push({ data: matrixData.join(''), cols }); // Guardar la matriz y el número de columnas
 
     // Limpiar y agregar elementos al contenedor
     numbersDiv.innerHTML = '';
-    numbersDiv.appendChild(matrixNumberElement); // Número de la matriz (arriba)
-    numbersDiv.appendChild(matrix); // Matriz
+    numbersDiv.appendChild(matrixNumberElement); // Agregar el número de la matriz (arriba)
+    numbersDiv.appendChild(matrix); // Agregar la matriz
 }
 
 function generateBinary(length) {
@@ -144,11 +145,19 @@ function showLastSeries() {
     let message = '';
 
     if (mode === "matrix") {
+        // Mostrar matrices en 0s y 1s con espacios según las columnas
         message = lastSeries
-            .map((series, index) => `Matriz ${index + 1}:\n${series.match(/.{1,2}/g).join(' ')}`)
+            .map((series, index) => {
+                const { data, cols } = series;
+                const formattedData = data
+                    .match(new RegExp(`.{1,${cols}}`, 'g')) // Dividir en grupos según las columnas
+                    .join('\n'); // Unir con saltos de línea
+                return `Matriz ${index + 1}:\n${formattedData}`;
+            })
             .join('\n\n');
     } else {
-        message = lastSeries.join('\n');
+        // Mostrar números decimales o binarios
+        message = lastSeries.map((series) => series.data).join('\n');
     }
 
     alert(`Última serie:\n${message}`);
