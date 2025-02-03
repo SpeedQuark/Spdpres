@@ -61,11 +61,11 @@ function showNumbers() {
     const numbersDiv = document.getElementById('numbers');
 
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
-    lastSeries.push(randomNumbers.join(' '));
+    lastSeries.push(randomNumbers.join(' • ')); // Separar por "•"
 
     numbersDiv.innerHTML = randomNumbers
         .map((num) => `<span class="number-pair">${num}</span>`)
-        .join(' ');
+        .join(' • '); // Separar por "•"
     numbersDiv.style.fontSize = `${size}px`;
     numbersDiv.style.display = 'flex';
     numbersDiv.style.gap = '10px';
