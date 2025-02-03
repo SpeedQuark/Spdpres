@@ -5,7 +5,6 @@ let isRunning = false;
 document.getElementById('start').addEventListener('click', startGenerator);
 document.getElementById('stop').addEventListener('click', stopGenerator);
 document.getElementById('showLast').addEventListener('click', showLastSeries);
-document.getElementById('exportLast').addEventListener('click', exportLastSeries);
 document.getElementById('mode').addEventListener('change', toggleMatrixControls);
 
 function startGenerator() {
@@ -191,38 +190,6 @@ function showLastSeries() {
     }
 
     alert(`Última serie:\n${message}`);
-}
-
-function exportLastSeries() {
-    if (lastSeries.length === 0) {
-        alert("No hay ninguna serie generada para exportar.");
-        return;
-    }
-
-    const mode = document.getElementById('mode').value;
-    let content = '';
-
-    if (mode === "matrix") {
-        content = lastSeries
-            .map((series, index) => {
-                const { data, cols } = series;
-                const formattedData = data
-                    .match(new RegExp(`.{1,${cols}}`, 'g'))
-                    .join('\n');
-                return `Matriz ${index + 1}:\n${formattedData}`;
-            })
-            .join('\n\n');
-    } else {
-        content = lastSeries.join('\n');
-    }
-
-    const blob = new Blob([content], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `serie_${new Date().toISOString()}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
 }
 
 function toggleMatrixControls() {
