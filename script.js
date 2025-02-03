@@ -36,6 +36,8 @@ function startGenerator() {
 
             if (mode === "matrix") {
                 showMatrix(count + 1);
+            } else if (mode === "figures") {
+                showFigures();
             } else {
                 showNumbers();
             }
@@ -51,14 +53,25 @@ function startGenerator() {
     showNextNumber();
 }
 
-function generateRandomNumber(mode) {
-    if (mode === "decimal") {
-        return String(Math.floor(Math.random() * 100)).padStart(2, '0');
-    } else if (mode === "binary6") {
-        return formatBinary(generateBinary(6), 3);
-    } else if (mode === "binary8") {
-        return formatBinary(generateBinary(8), 4);
-    }
+function showFigures() {
+    const numbersDiv = document.getElementById('numbers');
+    const figures = ['circle', 'square', 'triangle'];
+    const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
+
+    // Seleccionar una figura y un color aleatorio
+    const randomFigure = figures[Math.floor(Math.random() * figures.length)];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+    // Crear la figura
+    const figureElement = document.createElement('div');
+    figureElement.className = `figure ${randomFigure} ${randomColor}`;
+
+    // Guardar la figura en la última serie
+    lastSeries.push(`${randomFigure} ${randomColor}`);
+
+    // Mostrar la figura
+    numbersDiv.innerHTML = '';
+    numbersDiv.appendChild(figureElement);
 }
 
 function showNumbers() {
@@ -68,7 +81,7 @@ function showNumbers() {
     const numbersDiv = document.getElementById('numbers');
 
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
-    lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
+    lastSeries.push(randomNumbers.join(' • '));
 
     numbersDiv.innerHTML = randomNumbers
         .map((num) => `<div class="number-pair">${num}</div>`)
@@ -119,6 +132,16 @@ function showMatrix(matrixNumber) {
     numbersDiv.appendChild(matrix); // Agregar la matriz
 }
 
+function generateRandomNumber(mode) {
+    if (mode === "decimal") {
+        return String(Math.floor(Math.random() * 100)).padStart(2, '0');
+    } else if (mode === "binary6") {
+        return formatBinary(generateBinary(6), 3);
+    } else if (mode === "binary8") {
+        return formatBinary(generateBinary(8), 4);
+    }
+}
+
 function generateBinary(length) {
     let binary = '';
     for (let i = 0; i < length; i++) {
@@ -155,6 +178,9 @@ function showLastSeries() {
                 return `Matriz ${index + 1}:\n${formattedData}`;
             })
             .join('\n\n');
+    } else if (mode === "figures") {
+        // Mostrar la última serie de figuras
+        message = lastSeries.join('\n');
     } else {
         // Mostrar números decimales o binarios
         message = lastSeries.join('\n');
