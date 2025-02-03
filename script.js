@@ -55,23 +55,22 @@ function startGenerator() {
 
 function showFigures() {
     const numbersDiv = document.getElementById('numbers');
-    const figures = ['circle', 'square', 'triangle'];
-    const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
 
-    // Seleccionar una figura y un color aleatorio
-    const randomFigure = figures[Math.floor(Math.random() * figures.length)];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    // Generar un número aleatorio entre 00 y 99
+    const randomNumber = String(Math.floor(Math.random() * 100)).padStart(2, '0');
 
-    // Crear la figura
-    const figureElement = document.createElement('div');
-    figureElement.className = `figure ${randomFigure} ${randomColor}`;
+    // Crear la imagen
+    const imgElement = document.createElement('img');
+    imgElement.src = `figuras/${randomNumber}.png`; // Ruta de la imagen
+    imgElement.alt = `Figura ${randomNumber}`;
+    imgElement.style.width = `${size}px`; // Tamaño de la imagen
 
     // Guardar la figura en la última serie
-    lastSeries.push(`${randomFigure} ${randomColor}`);
+    lastSeries.push(randomNumber);
 
     // Mostrar la figura
     numbersDiv.innerHTML = '';
-    numbersDiv.appendChild(figureElement);
+    numbersDiv.appendChild(imgElement);
 }
 
 function showNumbers() {
