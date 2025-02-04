@@ -44,13 +44,15 @@ function startGenerator() {
         // Incrementar el contador
         count++;
 
-        // Calcular el tiempo total para el ciclo actual
-        const totalTime = displayTime + delay;
-
-        // Esperar el tiempo total antes de mostrar la siguiente figura
+        // Esperar el tiempo de visualización antes de limpiar
         timeoutId = setTimeout(() => {
-            showNextNumber();
-        }, totalTime);
+            numbersDiv.innerHTML = ''; // Limpiar el área de visualización
+
+            // Esperar el tiempo entre números antes de mostrar el siguiente
+            timeoutId = setTimeout(() => {
+                showNextNumber();
+            }, delay);
+        }, displayTime);
     }
 
     // Iniciar el proceso
