@@ -46,7 +46,7 @@ function startGenerator() {
 
         // Esperar el tiempo de visualización antes de limpiar
         timeoutId = setTimeout(() => {
-            numbersDiv.innerHTML = ''; // Limpiar el área de visualización
+            numbersDiv.innerHTML = ''; // Limpiar el área de visualización (tiempo en blanco)
 
             // Esperar el tiempo entre números antes de mostrar el siguiente
             timeoutId = setTimeout(() => {
