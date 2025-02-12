@@ -49,7 +49,7 @@ body {
 }
 
 .matrix-controls {
-    display: none;
+    display: flex; /* Mostrar controles de matrices */
 }
 
 .numbers-container {
@@ -57,7 +57,7 @@ body {
     height: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Alinear contenido arriba */
     align-items: center;
     overflow: hidden;
 }
@@ -81,7 +81,7 @@ body {
     display: grid;
     border: 2px solid #888;
     background-color: #f9f9f9;
-    margin-top: 0; /* Eliminar espacio superior */
+    margin-top: 5px; /* Espacio mínimo entre el número y la matriz */
 }
 
 .matrix .cell {
