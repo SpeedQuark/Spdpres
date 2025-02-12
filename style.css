@@ -1,4 +1,4 @@
- body {
+body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -81,7 +81,7 @@
     display: grid;
     border: 2px solid #888;
     background-color: #f9f9f9;
-    margin-top: 10px; /* Espacio entre el número y la matriz */
+    margin-top: 5px; /* Reducido el espacio entre el número y la matriz */
 }
 
 .matrix .cell {
@@ -102,7 +102,7 @@
 
 .matrix-number {
     font-size: 24px;
-    margin-bottom: 10px;
+    margin-bottom: 5px; /* Reducido el espacio */
     text-align: center;
     width: 100%;
 }
