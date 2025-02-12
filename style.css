@@ -81,7 +81,7 @@ body {
     display: grid;
     border: 2px solid #888;
     background-color: #f9f9f9;
-    margin-top: 5px; /* Reducido el espacio entre el número y la matriz */
+    margin-top: 0; /* Eliminar espacio superior */
 }
 
 .matrix .cell {
@@ -102,7 +102,8 @@ body {
 
 .matrix-number {
     font-size: 24px;
-    margin-bottom: 5px; /* Reducido el espacio */
+    margin-bottom: 5px; /* Reducir espacio inferior */
+    margin-top: 0; /* Eliminar espacio superior */
     text-align: center;
     width: 100%;
 }
