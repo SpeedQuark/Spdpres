@@ -61,8 +61,8 @@ function startGenerator() {
 
 function showNumbers() {
     const mode = document.getElementById('mode').value;
-    const pairs = parseInt(document.getElementById('pairs').value);
-    const size = parseInt(document.getElementById('size').value);
+    const pairs = parseInt(document.getElementById('pairs').value));
+    const size = parseInt(document.getElementById('size').value));
     const numbersDiv = document.getElementById('numbers');
 
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
@@ -104,10 +104,10 @@ function showFigures(size) {
 }
 
 function showMatrix(matrixNumber) {
-    const rows = parseInt(document.getElementById('rows').value);
-    const cols = parseInt(document.getElementById('cols').value);
-    const matrixSize = parseInt(document.getElementById('matrixSize').value);
-    const size = parseInt(document.getElementById('size').value);
+    const rows = parseInt(document.getElementById('rows').value));
+    const cols = parseInt(document.getElementById('cols').value));
+    const matrixSize = parseInt(document.getElementById('matrixSize').value));
+    const size = parseInt(document.getElementById('size').value));
     const numbersDiv = document.getElementById('numbers');
 
     if (rows <= 0 || cols <= 0) {
@@ -120,12 +120,14 @@ function showMatrix(matrixNumber) {
     matrixNumberElement.className = 'matrix-number';
     matrixNumberElement.textContent = matrixNumber;
     matrixNumberElement.style.fontSize = `${size}px`;
+    matrixNumberElement.style.marginBottom = '5px'; // Reducir espacio inferior
 
     // Crear la cuadrícula
     const matrix = document.createElement('div');
     matrix.className = 'matrix';
     matrix.style.gridTemplateColumns = `repeat(${cols}, ${matrixSize}px)`;
     matrix.style.gridTemplateRows = `repeat(${rows}, ${matrixSize}px)`;
+    matrix.style.marginTop = '0'; // Eliminar espacio superior
 
     // Guardar la matriz en la última serie
     const matrixData = [];
