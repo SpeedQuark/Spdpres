@@ -91,7 +91,9 @@ function showFigures(size) {
     const imgElement = document.createElement('img');
     imgElement.src = `figuras/${randomNumber}.png`;
     imgElement.alt = `Figura ${randomNumber}`;
-    imgElement.style.width = `${size}px`;
+    imgElement.style.width = `${size}px`; // Ajustar el tamaño de la imagen
+    imgElement.style.height = `${size}px`; // Asegurar que la altura sea igual al ancho
+    imgElement.style.objectFit = 'cover'; // Evitar distorsión
 
     // Guardar la figura en la última serie
     lastSeries.push(randomNumber);
