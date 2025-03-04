@@ -49,15 +49,16 @@ body {
 }
 
 .matrix-controls {
-    display: flex; /* Mostrar controles de matrices */
+    display: none; /* Ocultar por defecto */
 }
 
 .numbers-container {
     margin: 20px 0;
-    height: 400px;
+    min-height: 400px;
+    height: auto;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Alinear contenido arriba */
+    justify-content: center;
     align-items: center;
     overflow: hidden;
 }
@@ -81,14 +82,14 @@ body {
     display: grid;
     border: 2px solid #888;
     background-color: #f9f9f9;
-    margin-top: 5px; /* Espacio mínimo entre el número y la matriz */
+    margin-top: 5px;
 }
 
 .matrix .cell {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #000;
+    border: 1px solid #ccc;
 }
 
 .matrix .cell.white {
@@ -102,8 +103,8 @@ body {
 
 .matrix-number {
     font-size: 24px;
-    margin-bottom: 5px; /* Reducir espacio inferior */
-    margin-top: 0; /* Eliminar espacio superior */
+    margin-bottom: 5px;
+    margin-top: 0;
     text-align: center;
     width: 100%;
 }
@@ -120,6 +121,7 @@ body {
     font-size: 16px;
     cursor: pointer;
     flex: 1;
+    max-width: 200px;
     border: none;
     border-radius: 4px;
     background-color: #007bff;
@@ -155,7 +157,7 @@ body {
     }
 
     .control-group {
-        flex: 1 1 calc(50% - 10px);
+        flex: 1 1 100%;
     }
 
     .control-group label {
