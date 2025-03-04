@@ -32,6 +32,7 @@ function startGenerator() {
             return;
         }
 
+        // Mostrar la figura/número/matriz
         if (mode === "matrix") {
             showMatrix(count + 1);
         } else if (mode === "figures") {
@@ -40,16 +41,21 @@ function startGenerator() {
             showNumbers();
         }
 
+        // Incrementar el contador
         count++;
 
+        // Esperar el tiempo de visualización antes de limpiar
         timeoutId = setTimeout(() => {
-            numbersDiv.innerHTML = '';
+            numbersDiv.innerHTML = ''; // Limpiar el área de visualización
+
+            // Esperar el tiempo entre números antes de mostrar el siguiente
             timeoutId = setTimeout(() => {
                 showNextNumber();
             }, delay);
         }, displayTime);
     }
 
+    // Iniciar el proceso
     showNextNumber();
 }
 
@@ -60,11 +66,11 @@ function showNumbers() {
     const numbersDiv = document.getElementById('numbers');
 
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
-    lastSeries.push(randomNumbers.join(' • '));
+    lastSeries.push(randomNumbers.join(' • ')); // Guardar la serie
 
     numbersDiv.innerHTML = randomNumbers
         .map((num) => `<span class="number-pair">${num}</span>`)
-        .join(' • ');
+        .join(' • '); // Mostrar los números
     numbersDiv.style.fontSize = `${size}px`;
     numbersDiv.style.display = 'flex';
     numbersDiv.style.gap = '10px';
@@ -73,13 +79,15 @@ function showNumbers() {
 function showFigures(size) {
     const numbersDiv = document.getElementById('numbers');
 
+    // Generar un número aleatorio entre 0 y 99, omitiendo del 10 al 29
     let randomNumber;
     do {
         randomNumber = Math.floor(Math.random() * 100);
     } while (randomNumber >= 10 && randomNumber <= 29);
 
-    randomNumber = String(randomNumber).padStart(2, '0');
+    randomNumber = String(randomNumber).padStart(2, '0'); // Formatear a 2 dígitos
 
+    // Crear la imagen
     const imgElement = document.createElement('img');
     imgElement.src = `figuras/${randomNumber}.png`;
     imgElement.alt = `Figura ${randomNumber}`;
@@ -87,8 +95,10 @@ function showFigures(size) {
     imgElement.style.height = `${size}px`;
     imgElement.style.objectFit = 'cover';
 
+    // Guardar la figura en la última serie
     lastSeries.push(randomNumber);
 
+    // Mostrar la figura
     numbersDiv.innerHTML = '';
     numbersDiv.appendChild(imgElement);
 }
@@ -105,16 +115,19 @@ function showMatrix(matrixNumber) {
         return;
     }
 
+    // Crear el número de la matriz (arriba)
     const matrixNumberElement = document.createElement('div');
     matrixNumberElement.className = 'matrix-number';
     matrixNumberElement.textContent = matrixNumber;
     matrixNumberElement.style.fontSize = `${size}px`;
 
+    // Crear la cuadrícula
     const matrix = document.createElement('div');
     matrix.className = 'matrix';
     matrix.style.gridTemplateColumns = `repeat(${cols}, ${matrixSize}px)`;
     matrix.style.gridTemplateRows = `repeat(${rows}, ${matrixSize}px)`;
 
+    // Guardar la matriz en la última serie
     const matrixData = [];
     for (let i = 0; i < rows * cols; i++) {
         const cellValue = Math.random() < 0.5 ? '0' : '1';
@@ -126,6 +139,7 @@ function showMatrix(matrixNumber) {
     }
     lastSeries.push({ data: matrixData.join(''), cols });
 
+    // Limpiar y agregar elementos al contenedor
     numbersDiv.innerHTML = '';
     numbersDiv.appendChild(matrixNumberElement);
     numbersDiv.appendChild(matrix);
