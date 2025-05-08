@@ -36,17 +36,16 @@ function startGenerator() {
         if (mode === "matrix") {
             showMatrix(count + 1);
         } else if (mode === "figures") {
-            showFigures(size);
+            showFigures(count + 1); // Pasamos el contador para el historial
         } else {
             showNumbers();
         }
 
-        // Incrementar el contador
         count++;
 
         // Esperar el tiempo de visualización antes de limpiar
         timeoutId = setTimeout(() => {
-            numbersDiv.innerHTML = ''; // Limpiar el área de visualización (tiempo en blanco)
+            numbersDiv.innerHTML = ''; // Limpiar el área
 
             // Esperar el tiempo entre números antes de mostrar el siguiente
             timeoutId = setTimeout(() => {
@@ -55,7 +54,6 @@ function startGenerator() {
         }, displayTime);
     }
 
-    // Iniciar el proceso
     showNextNumber();
 }
 
@@ -66,39 +64,36 @@ function showNumbers() {
     const numbersDiv = document.getElementById('numbers');
 
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
-    lastSeries.push(randomNumbers.join(' • ')); // Separar por "•"
+    lastSeries.push(randomNumbers.join(' • '));
 
     numbersDiv.innerHTML = randomNumbers
         .map((num) => `<span class="number-pair">${num}</span>`)
-        .join(' • '); // Separar por "•"
+        .join(' • ');
     numbersDiv.style.fontSize = `${size}px`;
-    numbersDiv.style.display = 'flex';
-    numbersDiv.style.gap = '10px';
 }
 
-function showFigures(size) {
+function showFigures(count) {
+    const pairs = parseInt(document.getElementById('pairs').value);
+    const size = parseInt(document.getElementById('size').value);
     const numbersDiv = document.getElementById('numbers');
 
-    // Generar un número aleatorio entre 0 y 99, omitiendo del 10 al 29
-    let randomNumber;
-    do {
-        randomNumber = Math.floor(Math.random() * 100);
-    } while (randomNumber >= 10 && randomNumber <= 29); // Omitir del 10 al 29
+    // Generar figuras aleatorias (omitir del 10 al 29)
+    const randomFigures = [];
+    for (let i = 0; i < pairs; i++) {
+        let randomNumber;
+        do {
+            randomNumber = Math.floor(Math.random() * 100);
+        } while (randomNumber >= 10 && randomNumber <= 29);
+        randomFigures.push(String(randomNumber).padStart(2, '0'));
+    }
 
-    randomNumber = String(randomNumber).padStart(2, '0'); // Formatear a 2 dígitos
+    // Guardar en el historial
+    lastSeries.push(randomFigures.join(' • '));
 
-    // Crear la imagen
-    const imgElement = document.createElement('img');
-    imgElement.src = `figuras/${randomNumber}.png`;
-    imgElement.alt = `Figura ${randomNumber}`;
-    imgElement.style.width = `${size}px`;
-
-    // Guardar la figura en la última serie
-    lastSeries.push(randomNumber);
-
-    // Mostrar la figura
-    numbersDiv.innerHTML = '';
-    numbersDiv.appendChild(imgElement);
+    // Mostrar las figuras
+    numbersDiv.innerHTML = randomFigures
+        .map(num => `<img src="figuras/${num}.png" alt="Figura ${num}" style="width:${size}px">`)
+        .join(' • '); // Separador visual
 }
 
 function showMatrix(matrixNumber) {
@@ -147,9 +142,9 @@ function generateRandomNumber(mode) {
     if (mode === "decimal") {
         return String(Math.floor(Math.random() * 100)).padStart(2, '0');
     } else if (mode === "binary6") {
-        return formatBinary(generateBinary(6), 3); // Mantener saltos de línea
+        return formatBinary(generateBinary(6), 3);
     } else if (mode === "binary8") {
-        return formatBinary(generateBinary(8), 4); // Mantener saltos de línea
+        return formatBinary(generateBinary(8), 4);
     }
 }
 
@@ -164,7 +159,7 @@ function generateBinary(length) {
 function formatBinary(binary, groupSize) {
     const part1 = binary.slice(0, groupSize);
     const part2 = binary.slice(groupSize);
-    return `${part1}<br>${part2}`; // Mantener el salto de línea
+    return `${part1}<br>${part2}`;
 }
 
 function stopGenerator() {
@@ -188,8 +183,6 @@ function showLastSeries() {
                 return `Matriz ${index + 1}:\n${formattedData}`;
             })
             .join('\n\n');
-    } else if (mode === "figures") {
-        message = lastSeries.join('\n');
     } else {
         message = lastSeries.join('\n');
     }
