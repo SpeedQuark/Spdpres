@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Números Aleatorios</title>
-    <link rel="stylesheet" href="stylea.css"> <!-- Asegúrate de que el nombre coincida -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <!-- Controles principales -->
         <div class="controls">
             <div class="control-group">
                 <label for="mode">Modo:</label>
@@ -21,26 +20,25 @@
                 </select>
             </div>
             <div class="control-group">
-                <label for="quantity">Cantidad de números:</label>
+                <label for="quantity">Cantidad:</label>
                 <input type="number" id="quantity" min="1" value="10">
             </div>
             <div class="control-group">
                 <label for="delay">Tiempo entre números (ms):</label>
-                <input type="number" id="delay" min="0" value="150">
+                <input type="number" id="delay" min="0" value="500">
             </div>
             <div class="control-group">
-                <label for="displayTime">Tiempo de visualización (ms):</label>
-                <input type="number" id="displayTime" min="0" value="150">
+                <label for="displayTime">Tiempo visualización (ms):</label>
+                <input type="number" id="displayTime" min="0" value="1000">
             </div>
             <div class="control-group">
-                <label for="size">Tamaño de los números (px):</label>
+                <label for="size">Tamaño (px):</label>
                 <input type="number" id="size" min="10" value="50">
             </div>
             <div class="control-group">
-                <label for="pairs">Números pares simultáneos:</label>
+                <label for="pairs">Pares simultáneos:</label>
                 <input type="number" id="pairs" min="1" value="1">
             </div>
-            <!-- Controles específicos para matrices -->
             <div class="control-group matrix-controls">
                 <label for="rows">Filas:</label>
                 <input type="number" id="rows" min="1" value="2">
@@ -50,27 +48,24 @@
                 <input type="number" id="cols" min="1" value="2">
             </div>
             <div class="control-group matrix-controls">
-                <label for="matrixSize">Tamaño de celda (px):</label>
+                <label for="matrixSize">Tamaño celda (px):</label>
                 <input type="number" id="matrixSize" min="10" value="50">
             </div>
         </div>
 
-        <!-- Área de números/matrices/figuras -->
         <div class="numbers-container">
             <div class="numbers" id="numbers"></div>
         </div>
 
-        <!-- Botones de control -->
         <div class="buttons">
             <button id="start">Start</button>
             <button id="stop">Stop</button>
             <button id="showLast">Mostrar última serie</button>
         </div>
 
-        <!-- Historial -->
         <div id="history" class="history-container"></div>
     </div>
 
-    <script src="scripta.js"></script> <!-- Asegúrate de que el nombre coincida -->
+    <script src="script.js"></script>
 </body>
 </html>
