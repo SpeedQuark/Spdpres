@@ -2,23 +2,31 @@ let timeoutId;
 let lastSeries = [];
 let isRunning = false;
 
-document.getElementById('start').addEventListener('click', startGenerator);
-document.getElementById('stop').addEventListener('click', stopGenerator);
-document.getElementById('showLast').addEventListener('click', showLastSeries);
-document.getElementById('mode').addEventListener('change', toggleMatrixControls);
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('start').addEventListener('click', startGenerator);
+    document.getElementById('stop').addEventListener('click', stopGenerator);
+    document.getElementById('showLast').addEventListener('click', showLastSeries);
+    document.getElementById('mode').addEventListener('change', toggleMatrixControls);
+});
 
 function startGenerator() {
     if (isRunning) return;
     if (!validateInputs()) return;
+    
     isRunning = true;
     document.getElementById('start').disabled = true;
 
-    const quantity = Math.max(1, parseInt(document.getElementById('quantity').value));
-    const delay = Math.max(0, parseInt(document.getElementById('delay').value));
-    const displayTime = Math.max(0, parseInt(document.getElementById('displayTime').value));
-    const size = Math.max(10, parseInt(document.getElementById('size').value));
-    const pairs = Math.max(1, parseInt(document.getElementById('pairs').value));
-    const mode = document.getElementById('mode').value;
+    const config = {
+        quantity: parseInt(document.getElementById('quantity').value),
+        delay: parseInt(document.getElementById('delay').value),
+        displayTime: parseInt(document.getElementById('displayTime').value),
+        size: parseInt(document.getElementById('size').value),
+        pairs: parseInt(document.getElementById('pairs').value),
+        mode: document.getElementById('mode').value,
+        rows: parseInt(document.getElementById('rows')?.value || 0),
+        cols: parseInt(document.getElementById('cols')?.value || 0),
+        matrixSize: parseInt(document.getElementById('matrixSize')?.value || 0)
+    };
 
     const numbersDiv = document.getElementById('numbers');
     numbersDiv.innerHTML = '';
@@ -26,59 +34,50 @@ function startGenerator() {
 
     let count = 0;
 
-    function showNextNumber() {
-        if (count >= quantity || !isRunning) {
+    const showNextItem = () => {
+        if (count >= config.quantity || !isRunning) {
             stopGenerator();
             return;
         }
 
-        // Mostrar la figura/número/matriz
-        if (mode === "matrix") {
-            showMatrix(count + 1);
-        } else if (mode === "figures") {
-            showFigures(count + 1); // Pasamos el contador para el historial
-        } else {
-            showNumbers();
+        // Mostrar contenido según el modo
+        switch(config.mode) {
+            case "matrix":
+                showMatrix(count + 1, config);
+                break;
+            case "figures":
+                showFigures(config);
+                break;
+            default:
+                showNumbers(config);
         }
 
         count++;
 
-        // Esperar el tiempo de visualización antes de limpiar
+        // Temporizador para limpiar y mostrar siguiente
         timeoutId = setTimeout(() => {
-            numbersDiv.innerHTML = ''; // Limpiar el área
+            numbersDiv.innerHTML = '';
+            timeoutId = setTimeout(showNextItem, config.delay);
+        }, config.displayTime);
+    };
 
-            // Esperar el tiempo entre números antes de mostrar el siguiente
-            timeoutId = setTimeout(() => {
-                showNextNumber();
-            }, delay);
-        }, displayTime);
-    }
-
-    showNextNumber();
+    showNextItem();
 }
 
-function showNumbers() {
-    const mode = document.getElementById('mode').value;
-    const pairs = parseInt(document.getElementById('pairs').value);
-    const size = parseInt(document.getElementById('size').value);
+function showNumbers({ pairs, size, mode }) {
     const numbersDiv = document.getElementById('numbers');
-
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
+    
     lastSeries.push(randomNumbers.join(' • '));
-
-    numbersDiv.innerHTML = randomNumbers
-        .map((num) => `<span class="number-pair">${num}</span>`)
-        .join(' • ');
-    numbersDiv.style.fontSize = `${size}px`;
+    numbersDiv.innerHTML = randomNumbers.map(num => 
+        `<span class="number-pair" style="font-size:${size}px">${num}</span>`
+    ).join(' • ');
 }
 
-function showFigures(count) {
-    const pairs = parseInt(document.getElementById('pairs').value);
-    const size = parseInt(document.getElementById('size').value);
+function showFigures({ pairs, size }) {
     const numbersDiv = document.getElementById('numbers');
-
-    // Generar figuras aleatorias (omitir del 10 al 29)
     const randomFigures = [];
+
     for (let i = 0; i < pairs; i++) {
         let randomNumber;
         do {
@@ -87,40 +86,28 @@ function showFigures(count) {
         randomFigures.push(String(randomNumber).padStart(2, '0'));
     }
 
-    // Guardar en el historial
     lastSeries.push(randomFigures.join(' • '));
-
-    // Mostrar las figuras
-    numbersDiv.innerHTML = randomFigures
-        .map(num => `<img src="figuras/${num}.png" alt="Figura ${num}" style="width:${size}px">`)
-        .join(' • '); // Separador visual
+    numbersDiv.innerHTML = randomFigures.map(num => 
+        `<img src="figuras/${num}.png" alt="Figura ${num}" style="width:${size}px">`
+    ).join(' • ');
 }
 
-function showMatrix(matrixNumber) {
-    const rows = parseInt(document.getElementById('rows').value);
-    const cols = parseInt(document.getElementById('cols').value);
-    const matrixSize = parseInt(document.getElementById('matrixSize').value);
-    const size = parseInt(document.getElementById('size').value);
+function showMatrix(matrixNumber, { rows, cols, matrixSize, size }) {
     const numbersDiv = document.getElementById('numbers');
 
-    if (rows <= 0 || cols <= 0) {
-        alert("El número de filas y columnas debe ser mayor que 0.");
-        return;
-    }
+    // Número de matriz
+    const numberElement = document.createElement('div');
+    numberElement.className = 'matrix-number';
+    numberElement.textContent = matrixNumber;
+    numberElement.style.fontSize = `${size}px`;
 
-    // Crear el número de la matriz (arriba)
-    const matrixNumberElement = document.createElement('div');
-    matrixNumberElement.className = 'matrix-number';
-    matrixNumberElement.textContent = matrixNumber;
-    matrixNumberElement.style.fontSize = `${size}px`;
-
-    // Crear la cuadrícula
+    // Crear matriz
     const matrix = document.createElement('div');
     matrix.className = 'matrix';
     matrix.style.gridTemplateColumns = `repeat(${cols}, ${matrixSize}px)`;
     matrix.style.gridTemplateRows = `repeat(${rows}, ${matrixSize}px)`;
 
-    // Guardar la matriz en la última serie
+    // Celdas
     const matrixData = [];
     for (let i = 0; i < rows * cols; i++) {
         const cellValue = Math.random() < 0.5 ? '0' : '1';
@@ -130,101 +117,82 @@ function showMatrix(matrixNumber) {
         cell.className = `cell ${cellValue === '1' ? 'blue' : 'white'}`;
         matrix.appendChild(cell);
     }
-    lastSeries.push({ data: matrixData.join(''), cols });
 
-    // Limpiar y agregar elementos al contenedor
+    // Guardar y mostrar
+    lastSeries.push({ data: matrixData.join(''), cols });
     numbersDiv.innerHTML = '';
-    numbersDiv.appendChild(matrixNumberElement);
+    numbersDiv.appendChild(numberElement);
     numbersDiv.appendChild(matrix);
 }
 
 function generateRandomNumber(mode) {
-    if (mode === "decimal") {
-        return String(Math.floor(Math.random() * 100)).padStart(2, '0');
-    } else if (mode === "binary6") {
-        return formatBinary(generateBinary(6), 3);
-    } else if (mode === "binary8") {
-        return formatBinary(generateBinary(8), 4);
+    switch(mode) {
+        case "decimal":
+            return String(Math.floor(Math.random() * 100)).padStart(2, '0');
+        case "binary6":
+            return formatBinary(generateBinary(6), 3);
+        case "binary8":
+            return formatBinary(generateBinary(8), 4);
+        default:
+            return "00";
     }
 }
 
 function generateBinary(length) {
-    let binary = '';
-    for (let i = 0; i < length; i++) {
-        binary += Math.round(Math.random());
-    }
-    return binary;
+    return Array.from({ length }, () => Math.round(Math.random())).join('');
 }
 
 function formatBinary(binary, groupSize) {
-    const part1 = binary.slice(0, groupSize);
-    const part2 = binary.slice(groupSize);
-    return `${part1}<br>${part2}`;
+    return `${binary.slice(0, groupSize)}<br>${binary.slice(groupSize)}`;
 }
 
 function stopGenerator() {
     isRunning = false;
-    document.getElementById('start').disabled = false;
     clearTimeout(timeoutId);
-    document.getElementById('numbers').innerHTML = '';
+    document.getElementById('start').disabled = false;
 }
 
 function showLastSeries() {
     const mode = document.getElementById('mode').value;
-    let message = '';
-
+    const historyDiv = document.getElementById('history');
+    
     if (mode === "matrix") {
-        message = lastSeries
-            .map((series, index) => {
-                const { data, cols } = series;
-                const formattedData = data
-                    .match(new RegExp(`.{1,${cols}}`, 'g'))
-                    .join('\n');
-                return `Matriz ${index + 1}:\n${formattedData}`;
-            })
-            .join('\n\n');
+        historyDiv.innerHTML = lastSeries.map((series, i) => `
+            <div class="history-item">
+                <strong>Matriz ${i + 1}:</strong><br>
+                ${series.data.match(new RegExp(`.{1,${series.cols}}`, 'g')).join('<br>')}
+            </div>
+        `).join('<hr>');
     } else {
-        message = lastSeries.join('\n');
+        historyDiv.innerHTML = lastSeries.map((series, i) => `
+            <div class="history-item"><strong>Serie ${i + 1}:</strong> ${series}</div>
+        `).join('');
     }
-
-    alert(`Última serie:\n${message}`);
 }
 
 function toggleMatrixControls() {
     const mode = document.getElementById('mode').value;
     const matrixControls = document.querySelectorAll('.matrix-controls');
-
-    matrixControls.forEach((control) => {
+    matrixControls.forEach(control => {
         control.style.display = mode === "matrix" ? 'flex' : 'none';
     });
 }
 
 function validateInputs() {
-    const quantity = parseInt(document.getElementById('quantity').value);
-    const delay = parseInt(document.getElementById('delay').value);
-    const displayTime = parseInt(document.getElementById('displayTime').value);
-    const size = parseInt(document.getElementById('size').value);
-    const pairs = parseInt(document.getElementById('pairs').value);
+    const requiredInputs = [
+        { id: 'quantity', min: 1, message: "Cantidad debe ser > 0" },
+        { id: 'delay', min: 0, message: "Tiempo entre números no puede ser negativo" },
+        { id: 'displayTime', min: 0, message: "Tiempo de visualización no puede ser negativo" },
+        { id: 'size', min: 10, message: "Tamaño mínimo es 10px" },
+        { id: 'pairs', min: 1, message: "Debe haber al menos 1 par" }
+    ];
 
-    if (isNaN(quantity) || quantity <= 0) {
-        alert("La cantidad de números debe ser mayor que 0.");
-        return false;
-    }
-    if (isNaN(delay) || delay < 0) {
-        alert("El tiempo entre números no puede ser negativo.");
-        return false;
-    }
-    if (isNaN(displayTime) || displayTime < 0) {
-        alert("El tiempo de visualización no puede ser negativo.");
-        return false;
-    }
-    if (isNaN(size) || size < 10) {
-        alert("El tamaño de los números debe ser al menos 10px.");
-        return false;
-    }
-    if (isNaN(pairs) || pairs <= 0) {
-        alert("El número de pares simultáneos debe ser mayor que 0.");
-        return false;
+    for (const { id, min, message } of requiredInputs) {
+        const value = parseInt(document.getElementById(id).value);
+        if (isNaN(value) || value < min) {
+            alert(message);
+            return false;
+        }
     }
     return true;
 }
