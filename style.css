@@ -1,4 +1,4 @@
- body {
+body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -81,7 +81,7 @@
     display: grid;
     border: 2px solid #888;
     background-color: #f9f9f9;
-    margin-top: 10px; /* Espacio entre el número y la matriz */
+    margin-top: 10px;
 }
 
 .matrix .cell {
@@ -146,6 +146,13 @@
     border-radius: 5px;
     max-height: 200px;
     overflow-y: auto;
+}
+
+/* Estilos específicos para figuras */
+.numbers img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
 }
 
 @media (max-width: 600px) {
