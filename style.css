@@ -148,11 +148,14 @@ body {
     overflow-y: auto;
 }
 
-/* Estilos específicos para figuras */
+/* Estilos para figuras */
 .numbers img {
     max-width: 100%;
     height: auto;
     object-fit: contain;
+    background-color: #f0f0f0;
+    border: 1px dashed #ccc;
+    padding: 5px;
 }
 
 @media (max-width: 600px) {
@@ -161,21 +164,6 @@ body {
     }
 
     .control-group {
-        flex: 1 1 calc(50% - 10px);
-    }
-
-    .control-group label {
-        font-size: 12px;
-    }
-
-    .control-group input,
-    .control-group select {
-        font-size: 12px;
-        padding: 6px;
-    }
-
-    .buttons button {
-        padding: 8px 16px;
-        font-size: 14px;
+        flex: 1 1 100%;
     }
 }
