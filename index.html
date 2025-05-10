@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Números Aleatorios</title>
+    <title>Generador de Figuras Numéricas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,43 +12,43 @@
             <div class="control-group">
                 <label for="mode">Modo:</label>
                 <select id="mode">
-                    <option value="decimal">Decimales</option>
-                    <option value="binary6">Binarios6</option>
-                    <option value="binary8">Binarios8</option>
-                    <option value="matrix">Matrices</option>
-                    <option value="figures">Figuras</option>
+                    <option value="decimal">Decimal</option>
+                    <option value="binary6">Binario 6</option>
+                    <option value="binary8">Binario 8</option>
+                    <option value="matrix">Matriz</option>
+                    <option value="figures">Figura</option>
                 </select>
             </div>
-            <div class="control-group">
+            <div class="control-group compact">
                 <label for="quantity">Cantidad:</label>
                 <input type="number" id="quantity" min="1" value="10">
             </div>
-            <div class="control-group">
-                <label for="delay">Tiempo entre (ms):</label>
+            <div class="control-group compact">
+                <label for="delay">Entre (ms):</label>
                 <input type="number" id="delay" min="0" value="500">
             </div>
-            <div class="control-group">
-                <label for="displayTime">Visualización (ms):</label>
+            <div class="control-group compact">
+                <label for="displayTime">Mostrar (ms):</label>
                 <input type="number" id="displayTime" min="0" value="1000">
             </div>
-            <div class="control-group">
-                <label for="size">Tamaño (px):</label>
-                <input type="number" id="size" min="10" value="50">
+            <div class="control-group compact">
+                <label for="size">Tamaño:</label>
+                <input type="number" id="size" min="10" value="60">
             </div>
-            <div class="control-group">
-                <label for="pairs">Pares simultáneos:</label>
+            <div class="control-group compact">
+                <label for="pairs">Pares:</label>
                 <input type="number" id="pairs" min="1" value="1">
             </div>
-            <div class="control-group matrix-controls">
+            <div class="control-group compact matrix-controls">
                 <label for="rows">Filas:</label>
                 <input type="number" id="rows" min="1" value="2">
             </div>
-            <div class="control-group matrix-controls">
+            <div class="control-group compact matrix-controls">
                 <label for="cols">Columnas:</label>
                 <input type="number" id="cols" min="1" value="2">
             </div>
-            <div class="control-group matrix-controls">
-                <label for="matrixSize">Tamaño celda (px):</label>
+            <div class="control-group compact matrix-controls">
+                <label for="matrixSize">Celda:</label>
                 <input type="number" id="matrixSize" min="10" value="50">
             </div>
         </div>
@@ -58,9 +58,9 @@
         </div>
 
         <div class="buttons">
-            <button id="start">Start</button>
-            <button id="stop">Stop</button>
-            <button id="showLast">Mostrar última serie</button>
+            <button id="start">Iniciar</button>
+            <button id="stop">Detener</button>
+            <button id="showLast">Ver serie</button>
         </div>
     </div>
 
