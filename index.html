@@ -3,53 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Figuras Numéricas</title>
+    <title>Generador de Figuras</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <div class="controls">
-            <div class="control-group">
-                <label for="mode">Modo:</label>
-                <select id="mode">
-                    <option value="decimal">Decimal</option>
-                    <option value="binary6">Binario 6</option>
-                    <option value="binary8">Binario 8</option>
-                    <option value="matrix">Matriz</option>
-                    <option value="figures">Figura</option>
-                </select>
+            <!-- Fila 1 -->
+            <div class="control-row">
+                <div class="control-group">
+                    <label for="mode">Modo:</label>
+                    <select id="mode">
+                        <option value="decimal">Decimal</option>
+                        <option value="binary6">Binario 6</option>
+                        <option value="binary8">Binario 8</option>
+                        <option value="matrix">Matriz</option>
+                        <option value="figures">Figura</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="quantity">Cantidad:</label>
+                    <input type="number" id="quantity" min="1" value="10">
+                </div>
             </div>
-            <div class="control-group compact">
-                <label for="quantity">Cantidad:</label>
-                <input type="number" id="quantity" min="1" value="10">
+            
+            <!-- Fila 2 -->
+            <div class="control-row">
+                <div class="control-group">
+                    <label for="delay">Entre (ms):</label>
+                    <input type="number" id="delay" min="0" value="500">
+                </div>
+                <div class="control-group">
+                    <label for="displayTime">Mostrar (ms):</label>
+                    <input type="number" id="displayTime" min="0" value="1000">
+                </div>
             </div>
-            <div class="control-group compact">
-                <label for="delay">Entre (ms):</label>
-                <input type="number" id="delay" min="0" value="500">
+            
+            <!-- Fila 3 -->
+            <div class="control-row">
+                <div class="control-group">
+                    <label for="size">Tamaño (px):</label>
+                    <input type="number" id="size" min="10" value="60">
+                </div>
+                <div class="control-group">
+                    <label for="pairs">Pares:</label>
+                    <input type="number" id="pairs" min="1" value="1">
+                </div>
             </div>
-            <div class="control-group compact">
-                <label for="displayTime">Mostrar (ms):</label>
-                <input type="number" id="displayTime" min="0" value="1000">
+            
+            <!-- Controles de matriz (ocultos por defecto) -->
+            <div class="control-row matrix-controls">
+                <div class="control-group">
+                    <label for="rows">Filas:</label>
+                    <input type="number" id="rows" min="1" value="2">
+                </div>
+                <div class="control-group">
+                    <label for="cols">Columnas:</label>
+                    <input type="number" id="cols" min="1" value="2">
+                </div>
             </div>
-            <div class="control-group compact">
-                <label for="size">Tamaño:</label>
-                <input type="number" id="size" min="10" value="60">
-            </div>
-            <div class="control-group compact">
-                <label for="pairs">Pares:</label>
-                <input type="number" id="pairs" min="1" value="1">
-            </div>
-            <div class="control-group compact matrix-controls">
-                <label for="rows">Filas:</label>
-                <input type="number" id="rows" min="1" value="2">
-            </div>
-            <div class="control-group compact matrix-controls">
-                <label for="cols">Columnas:</label>
-                <input type="number" id="cols" min="1" value="2">
-            </div>
-            <div class="control-group compact matrix-controls">
-                <label for="matrixSize">Celda:</label>
-                <input type="number" id="matrixSize" min="10" value="50">
+            
+            <div class="control-row matrix-controls">
+                <div class="control-group">
+                    <label for="matrixSize">Celda (px):</label>
+                    <input type="number" id="matrixSize" min="10" value="50">
+                </div>
             </div>
         </div>
 
