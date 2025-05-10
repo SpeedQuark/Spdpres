@@ -2,12 +2,10 @@ let timeoutId;
 let lastSeries = [];
 let isRunning = false;
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('start').addEventListener('click', startGenerator);
-    document.getElementById('stop').addEventListener('click', stopGenerator);
-    document.getElementById('showLast').addEventListener('click', showLastSeries);
-    document.getElementById('mode').addEventListener('change', toggleMatrixControls);
-});
+document.getElementById('start').addEventListener('click', startGenerator);
+document.getElementById('stop').addEventListener('click', stopGenerator);
+document.getElementById('showLast').addEventListener('click', showLastSeries);
+document.getElementById('mode').addEventListener('change', toggleMatrixControls);
 
 function startGenerator() {
     if (isRunning) return;
@@ -16,17 +14,12 @@ function startGenerator() {
     isRunning = true;
     document.getElementById('start').disabled = true;
 
-    const config = {
-        quantity: parseInt(document.getElementById('quantity').value),
-        delay: parseInt(document.getElementById('delay').value),
-        displayTime: parseInt(document.getElementById('displayTime').value),
-        size: parseInt(document.getElementById('size').value),
-        pairs: parseInt(document.getElementById('pairs').value),
-        mode: document.getElementById('mode').value,
-        rows: parseInt(document.getElementById('rows')?.value || 0),
-        cols: parseInt(document.getElementById('cols')?.value || 0),
-        matrixSize: parseInt(document.getElementById('matrixSize')?.value || 0)
-    };
+    const quantity = parseInt(document.getElementById('quantity').value);
+    const delay = parseInt(document.getElementById('delay').value);
+    const displayTime = parseInt(document.getElementById('displayTime').value);
+    const size = parseInt(document.getElementById('size').value);
+    const pairs = parseInt(document.getElementById('pairs').value);
+    const mode = document.getElementById('mode').value;
 
     const numbersDiv = document.getElementById('numbers');
     numbersDiv.innerHTML = '';
@@ -34,80 +27,84 @@ function startGenerator() {
 
     let count = 0;
 
-    const showNextItem = () => {
-        if (count >= config.quantity || !isRunning) {
+    function showNextNumber() {
+        if (count >= quantity || !isRunning) {
             stopGenerator();
             return;
         }
 
-        // Mostrar contenido según el modo
-        switch(config.mode) {
-            case "matrix":
-                showMatrix(count + 1, config);
-                break;
-            case "figures":
-                showFigures(config);
-                break;
-            default:
-                showNumbers(config);
+        if (mode === "matrix") {
+            showMatrix(count + 1);
+        } else if (mode === "figures") {
+            showFigures();
+        } else {
+            showNumbers();
         }
 
         count++;
 
-        // Temporizador para limpiar y mostrar siguiente
         timeoutId = setTimeout(() => {
             numbersDiv.innerHTML = '';
-            timeoutId = setTimeout(showNextItem, config.delay);
-        }, config.displayTime);
-    };
+            timeoutId = setTimeout(showNextNumber, delay);
+        }, displayTime);
+    }
 
-    showNextItem();
+    showNextNumber();
 }
 
-function showNumbers({ pairs, size, mode }) {
+function showNumbers() {
+    const mode = document.getElementById('mode').value;
+    const pairs = parseInt(document.getElementById('pairs').value);
+    const size = parseInt(document.getElementById('size').value);
     const numbersDiv = document.getElementById('numbers');
+
     const randomNumbers = Array.from({ length: pairs }, () => generateRandomNumber(mode));
-    
     lastSeries.push(randomNumbers.join(' • '));
-    numbersDiv.innerHTML = randomNumbers.map(num => 
-        `<span class="number-pair" style="font-size:${size}px">${num}</span>`
-    ).join(' • ');
+
+    numbersDiv.innerHTML = randomNumbers
+        .map(num => `<span class="number-pair" style="font-size:${size}px">${num}</span>`)
+        .join(' • ');
 }
 
-function showFigures({ pairs, size }) {
+function showFigures() {
+    const pairs = parseInt(document.getElementById('pairs').value);
+    const size = parseInt(document.getElementById('size').value);
     const numbersDiv = document.getElementById('numbers');
-    const randomFigures = [];
 
+    const randomFigures = [];
     for (let i = 0; i < pairs; i++) {
         let randomNumber;
         do {
             randomNumber = Math.floor(Math.random() * 100);
         } while (randomNumber >= 10 && randomNumber <= 29);
-        randomFigures.push(String(randomNumber).padStart(2, '0'));
+        randomNumber = String(randomNumber).padStart(2, '0');
+        randomFigures.push(randomNumber);
     }
 
     lastSeries.push(randomFigures.join(' • '));
-    numbersDiv.innerHTML = randomFigures.map(num => 
-        `<img src="figuras/${num}.png" alt="Figura ${num}" style="width:${size}px">`
-    ).join(' • ');
+
+    numbersDiv.innerHTML = randomFigures
+        .map(num => `<img src="figuras/${num}.png" alt="Figura ${num}" style="width:${size}px">`)
+        .join(' • ');
 }
 
-function showMatrix(matrixNumber, { rows, cols, matrixSize, size }) {
+function showMatrix(matrixNumber) {
+    const rows = parseInt(document.getElementById('rows').value);
+    const cols = parseInt(document.getElementById('cols').value);
+    const matrixSize = parseInt(document.getElementById('matrixSize').value);
+    const size = parseInt(document.getElementById('size').value);
     const numbersDiv = document.getElementById('numbers');
 
-    // Número de matriz
-    const numberElement = document.createElement('div');
-    numberElement.className = 'matrix-number';
-    numberElement.textContent = matrixNumber;
-    numberElement.style.fontSize = `${size}px`;
+    const matrixNumberElement = document.createElement('div');
+    matrixNumberElement.className = 'matrix-number';
+    matrixNumberElement.textContent = matrixNumber;
+    matrixNumberElement.style.fontSize = `${size}px`;
 
-    // Crear matriz
     const matrix = document.createElement('div');
     matrix.className = 'matrix';
     matrix.style.gridTemplateColumns = `repeat(${cols}, ${matrixSize}px)`;
     matrix.style.gridTemplateRows = `repeat(${rows}, ${matrixSize}px)`;
 
-    // Celdas
     const matrixData = [];
     for (let i = 0; i < rows * cols; i++) {
         const cellValue = Math.random() < 0.5 ? '0' : '1';
@@ -117,57 +114,49 @@ function showMatrix(matrixNumber, { rows, cols, matrixSize, size }) {
         cell.className = `cell ${cellValue === '1' ? 'blue' : 'white'}`;
         matrix.appendChild(cell);
     }
-
-    // Guardar y mostrar
     lastSeries.push({ data: matrixData.join(''), cols });
+
     numbersDiv.innerHTML = '';
-    numbersDiv.appendChild(numberElement);
+    numbersDiv.appendChild(matrixNumberElement);
     numbersDiv.appendChild(matrix);
 }
 
 function generateRandomNumber(mode) {
-    switch(mode) {
-        case "decimal":
-            return String(Math.floor(Math.random() * 100)).padStart(2, '0');
-        case "binary6":
-            return formatBinary(generateBinary(6), 3);
-        case "binary8":
-            return formatBinary(generateBinary(8), 4);
-        default:
-            return "00";
+    if (mode === "decimal") {
+        return String(Math.floor(Math.random() * 100)).padStart(2, '0');
+    } else if (mode === "binary6") {
+        const binary = Array.from({ length: 6 }, () => Math.round(Math.random())).join('');
+        return `${binary.slice(0, 3)}<br>${binary.slice(3)}`;
+    } else if (mode === "binary8") {
+        const binary = Array.from({ length: 8 }, () => Math.round(Math.random())).join('');
+        return `${binary.slice(0, 4)}<br>${binary.slice(4)}`;
     }
-}
-
-function generateBinary(length) {
-    return Array.from({ length }, () => Math.round(Math.random())).join('');
-}
-
-function formatBinary(binary, groupSize) {
-    return `${binary.slice(0, groupSize)}<br>${binary.slice(groupSize)}`;
 }
 
 function stopGenerator() {
     isRunning = false;
-    clearTimeout(timeoutId);
     document.getElementById('start').disabled = false;
+    clearTimeout(timeoutId);
+    document.getElementById('numbers').innerHTML = '';
 }
 
 function showLastSeries() {
     const mode = document.getElementById('mode').value;
-    const historyDiv = document.getElementById('history');
-    
+    let message = '';
+
     if (mode === "matrix") {
-        historyDiv.innerHTML = lastSeries.map((series, i) => `
-            <div class="history-item">
-                <strong>Matriz ${i + 1}:</strong><br>
-                ${series.data.match(new RegExp(`.{1,${series.cols}}`, 'g')).join('<br>')}
-            </div>
-        `).join('<hr>');
+        message = lastSeries
+            .map((series, index) => {
+                const { data, cols } = series;
+                const formattedData = data.match(new RegExp(`.{1,${cols}}`, 'g')).join('\n');
+                return `Matriz ${index + 1}:\n${formattedData}`;
+            })
+            .join('\n\n');
     } else {
-        historyDiv.innerHTML = lastSeries.map((series, i) => `
-            <div class="history-item"><strong>Serie ${i + 1}:</strong> ${series}</div>
-        `).join('');
+        message = lastSeries.join('\n');
     }
+
+    alert(`Última serie:\n${message}`);
 }
 
 function toggleMatrixControls() {
@@ -179,15 +168,15 @@ function toggleMatrixControls() {
 }
 
 function validateInputs() {
-    const requiredInputs = [
-        { id: 'quantity', min: 1, message: "Cantidad debe ser > 0" },
+    const inputs = [
+        { id: 'quantity', min: 1, message: "La cantidad debe ser > 0" },
         { id: 'delay', min: 0, message: "Tiempo entre números no puede ser negativo" },
         { id: 'displayTime', min: 0, message: "Tiempo de visualización no puede ser negativo" },
         { id: 'size', min: 10, message: "Tamaño mínimo es 10px" },
         { id: 'pairs', min: 1, message: "Debe haber al menos 1 par" }
     ];
 
-    for (const { id, min, message } of requiredInputs) {
+    for (const { id, min, message } of inputs) {
         const value = parseInt(document.getElementById(id).value);
         if (isNaN(value) || value < min) {
             alert(message);
