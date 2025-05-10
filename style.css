@@ -1,51 +1,56 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     background-color: #f0f0f0;
+    font-size: 14px;
 }
 
 .container {
-    text-align: center;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 90%;
+    width: 100%;
     max-width: 800px;
-    margin: 20px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }
 
 .controls {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 15px;
 }
 
 .control-group {
-    flex: 1 1 calc(33.33% - 15px);
-    display: flex;
-    flex-direction: column;
+    flex: 1 1 calc(20% - 8px);
+    min-width: 80px;
+}
+
+.control-group.compact {
+    flex: 0 1 calc(16% - 8px);
+    min-width: 60px;
 }
 
 .control-group label {
-    font-size: 14px;
-    margin-bottom: 5px;
+    display: block;
+    font-size: 12px;
+    margin-bottom: 2px;
+    color: #555;
 }
 
 .control-group input,
 .control-group select {
     width: 100%;
-    padding: 8px;
-    font-size: 14px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
+    padding: 6px;
+    font-size: 12px;
+    border: 1px solid #ddd;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .matrix-controls {
@@ -53,85 +58,61 @@ body {
 }
 
 .numbers-container {
-    margin: 20px 0;
-    height: 400px;
+    margin: 15px 0;
+    height: 300px;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    background-color: #f9f9f9;
+    border-radius: 5px;
 }
 
 .numbers {
-    font-weight: bold;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
+    padding: 10px;
 }
 
-.numbers .number-pair {
-    display: inline-block;
+.numbers img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    border: 1px solid #eee;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.matrix {
-    display: grid;
-    border: 2px solid #888;
-    background-color: #f9f9f9;
-    margin-top: 10px;
-}
-
-.matrix .cell {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #000;
-}
-
-.matrix .cell.white {
-    background-color: #fff;
-}
-
-.matrix .cell.blue {
-    background-color: #0056b3;
-    color: #fff;
-}
-
-.matrix-number {
-    font-size: 24px;
-    margin-bottom: 10px;
-    text-align: center;
-    width: 100%;
+.numbers:empty::before {
+    content: "Preparado para mostrar figuras...";
+    color: #999;
+    font-style: italic;
 }
 
 .buttons {
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 8px;
+    margin-top: 15px;
 }
 
 .buttons button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
     flex: 1;
+    padding: 8px;
+    font-size: 13px;
     border: none;
     border-radius: 4px;
     background-color: #007bff;
-    color: #fff;
-    transition: background-color 0.3s ease;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
 .buttons button:hover {
-    background-color: #0056b3;
-}
-
-.buttons button:active {
-    background-color: #004080;
+    background-color: #0069d9;
 }
 
 .buttons button:disabled {
@@ -139,21 +120,11 @@ body {
     cursor: not-allowed;
 }
 
-/* Estilos para figuras */
-.numbers img {
-    max-width: 100%;
-    height: auto;
-    object-fit: contain;
-    background-color: #f0f0f0;
-    border: 1px dashed #ccc;
-    padding: 5px;
-}
-
 @media (max-width: 600px) {
-    .container {
-        padding: 10px;
-    }
     .control-group {
-        flex: 1 1 100%;
+        flex: 1 1 calc(33% - 8px);
+    }
+    .control-group.compact {
+        flex: 1 1 calc(25% - 8px);
     }
 }
