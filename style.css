@@ -1,165 +1,104 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f5f5f5;
-}
+let timeoutId;
+let lastSeries = [];
+let isRunning = false;
 
-.container {
-    width: 100%;
-    max-width: 500px;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+// Lista de figuras válidas (00-09 y 30-99)
+const validFigures = Array.from({length: 100}, (_, i) => 
+    String(i).padStart(2, '0')).filter(num => {
+    const n = parseInt(num);
+    return n < 10 || n > 29;
+});
 
-.controls {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
-}
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('start').addEventListener('click', startGenerator);
+    document.getElementById('stop').addEventListener('click', stopGenerator);
+    document.getElementById('showLast').addEventListener('click', showLastSeries);
+    document.getElementById('mode').addEventListener('change', toggleMatrixControls);
+});
 
-.control-row {
-    display: flex;
-    gap: 10px;
-}
+function startGenerator() {
+    if (isRunning) return;
+    if (!validateInputs()) return;
+    
+    isRunning = true;
+    document.getElementById('start').disabled = true;
+    document.getElementById('numbers').classList.add('loading');
 
-.control-group {
-    flex: 1;
-    min-width: 0;
-}
+    const config = {
+        quantity: parseInt(document.getElementById('quantity').value),
+        delay: parseInt(document.getElementById('delay').value),
+        displayTime: parseInt(document.getElementById('displayTime').value),
+        size: parseInt(document.getElementById('size').value),
+        pairs: parseInt(document.getElementById('pairs').value),
+        mode: document.getElementById('mode').value,
+        rows: parseInt(document.getElementById('rows')?.value || 0),
+        cols: parseInt(document.getElementById('cols')?.value || 0),
+        matrixSize: parseInt(document.getElementById('matrixSize')?.value || 0)
+    };
 
-.control-group label {
-    display: block;
-    font-size: 13px;
-    margin-bottom: 5px;
-    color: #555;
-}
+    const numbersDiv = document.getElementById('numbers');
+    numbersDiv.innerHTML = '';
+    lastSeries = [];
 
-.control-group input,
-.control-group select {
-    width: 100%;
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
+    let count = 0;
 
-.matrix-controls {
-    display: none;
-}
+    function generate() {
+        if (count >= config.quantity || !isRunning) {
+            stopGenerator();
+            return;
+        }
 
-.numbers-container {
-    margin: 20px 0;
-    height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #fafafa;
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-}
+        numbersDiv.classList.remove('loading');
+        
+        switch(config.mode) {
+            case "matrix":
+                showMatrix(count + 1, config);
+                break;
+            case "figures":
+                showFigures(config);
+                break;
+            default:
+                showNumbers(config);
+        }
 
-.numbers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
-    padding: 15px;
-    width: 100%;
-}
+        count++;
 
-.numbers img {
-    max-width: 100%;
-    height: auto;
-    object-fit: contain;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
-    background-color: white;
-    padding: 5px;
-}
-
-.numbers img:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
-}
-
-/* Sombra de precarga */
-.numbers::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
-    animation: shimmer 1.5s infinite;
-    z-index: 1;
-    display: none;
-}
-
-@keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-}
-
-.numbers.loading::before {
-    display: block;
-}
-
-.buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.buttons button {
-    flex: 1;
-    padding: 10px;
-    font-size: 14px;
-    border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.buttons button:hover {
-    background-color: #45a049;
-}
-
-.buttons button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-#stop {
-    background-color: #f44336;
-}
-
-#stop:hover {
-    background-color: #d32f2f;
-}
-
-#showLast {
-    background-color: #2196F3;
-}
-
-#showLast:hover {
-    background-color: #0b7dda;
-}
-
-@media (max-width: 400px) {
-    .control-row {
-        flex-direction: column;
+        timeoutId = setTimeout(() => {
+            numbersDiv.innerHTML = '';
+            numbersDiv.classList.add('loading');
+            timeoutId = setTimeout(generate, config.delay);
+        }, config.displayTime);
     }
+
+    generate();
 }
+
+function showFigures({ pairs, size }) {
+    const numbersDiv = document.getElementById('numbers');
+    
+    // Seleccionar figuras aleatorias sin repetición
+    const shuffled = [...validFigures].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, pairs);
+    
+    // Precargar imágenes
+    selected.forEach(num => {
+        const img = new Image();
+        img.src = `figuras/${num}.png`;
+        img.style.width = `${size}px`;
+        img.alt = `Figura ${num}`;
+        numbersDiv.appendChild(img);
+    });
+
+    lastSeries.push(selected.join(' • '));
+}
+
+// ... (Mantén las otras funciones showNumbers, showMatrix, etc.)
+
+function stopGenerator() {
+    isRunning = false;
+    document.getElementById('start').disabled = false;
+    clearTimeout(timeoutId);
+    document.getElementById('numbers').classList.remove('loading');
+}
+
+// ... (Resto de funciones igual que en la versión anterior)
