@@ -2,11 +2,9 @@ let timeoutId;
 let lastSeries = [];
 let isRunning = false;
 
-// Lista de figuras válidas (00-09 y 30-99)
-const validFigures = [];
-for (let i = 0; i < 100; i++) {
-    if (i < 10 || i > 29) validFigures.push(String(i).padStart(2, '0'));
-}
+// Figuras válidas (00-09 y 30-99)
+const validFigures = Array.from({length: 70}, (_, i) => 
+    i < 10 ? String(i).padStart(2, '0') : String(i + 20).padStart(2, '0'));
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('start').addEventListener('click', startGenerator);
@@ -17,7 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function startGenerator() {
     if (isRunning) return;
-    if (!validateInputs()) return;
+    
+    if (!validateInputs()) {
+        alert("Por favor corrige los valores ingresados");
+        return;
+    }
     
     isRunning = true;
     document.getElementById('start').disabled = true;
@@ -29,9 +31,9 @@ function startGenerator() {
         size: parseInt(document.getElementById('size').value),
         pairs: parseInt(document.getElementById('pairs').value),
         mode: document.getElementById('mode').value,
-        rows: parseInt(document.getElementById('rows')?.value || 0),
-        cols: parseInt(document.getElementById('cols')?.value || 0),
-        matrixSize: parseInt(document.getElementById('matrixSize')?.value || 0)
+        rows: parseInt(document.getElementById('rows')?.value || 2),
+        cols: parseInt(document.getElementById('cols')?.value || 2),
+        matrixSize: parseInt(document.getElementById('matrixSize')?.value || 50)
     };
 
     const numbersDiv = document.getElementById('numbers');
@@ -46,6 +48,8 @@ function startGenerator() {
             return;
         }
 
+        numbersDiv.innerHTML = '';
+        
         switch(config.mode) {
             case "matrix":
                 showMatrix(count + 1, config);
@@ -70,37 +74,99 @@ function startGenerator() {
 
 function showFigures({ pairs, size }) {
     const numbersDiv = document.getElementById('numbers');
-    const figures = [];
-    
-    // Seleccionar figuras aleatorias válidas
     const shuffled = [...validFigures].sort(() => 0.5 - Math.random());
     const selected = shuffled.slice(0, pairs);
 
     selected.forEach(num => {
-        figures.push(`<img src="figuras/${num}.png" alt="Figura ${num}" style="width:${size}px">`);
+        const img = document.createElement('img');
+        img.src = `figuras/${num}.png`;
+        img.style.width = `${size}px`;
+        img.alt = `Figura ${num}`;
+        img.onerror = () => img.style.display = 'none'; // Oculta si no carga
+        numbersDiv.appendChild(img);
     });
 
     lastSeries.push(selected.join(' • '));
-    numbersDiv.innerHTML = figures.join(' • ');
 }
 
-// ... (Mantén las otras funciones showNumbers, showMatrix, generateRandomNumber, etc. igual que en tu versión original)
+function showNumbers({ pairs, size, mode }) {
+    const numbersDiv = document.getElementById('numbers');
+    const randomNumbers = Array.from({length: pairs}, () => generateRandomNumber(mode));
+    
+    lastSeries.push(randomNumbers.join(' • '));
+    numbersDiv.innerHTML = randomNumbers.map(num => 
+        `<span style="font-size:${size}px">${num}</span>`
+    ).join(' • ');
+}
 
-// Función para verificar existencia de imágenes (opcional)
-function imageExists(url) {
-    const img = new Image();
-    img.src = url;
-    return img.height > 0;
+function showMatrix(matrixNumber, { rows, cols, matrixSize, size }) {
+    const numbersDiv = document.getElementById('numbers');
+    
+    // Número de matriz
+    const numberElement = document.createElement('div');
+    numberElement.textContent = matrixNumber;
+    numberElement.style.fontSize = `${size}px`;
+    numberElement.style.marginBottom = '10px';
+    
+    // Crear matriz
+    const matrix = document.createElement('div');
+    matrix.style.display = 'grid';
+    matrix.style.gridTemplateColumns = `repeat(${cols}, ${matrixSize}px)`;
+    matrix.style.gridTemplateRows = `repeat(${rows}, ${matrixSize}px)`;
+    matrix.style.gap = '1px';
+    matrix.style.backgroundColor = '#888';
+    
+    // Celdas
+    const matrixData = [];
+    for (let i = 0; i < rows * cols; i++) {
+        const cellValue = Math.random() < 0.5 ? '0' : '1';
+        matrixData.push(cellValue);
+        
+        const cell = document.createElement('div');
+        cell.style.display = 'flex';
+        cell.style.justifyContent = 'center';
+        cell.style.alignItems = 'center';
+        cell.style.backgroundColor = cellValue === '1' ? '#0056b3' : 'white';
+        matrix.appendChild(cell);
+    }
+    
+    lastSeries.push({ data: matrixData.join(''), cols });
+    numbersDiv.appendChild(numberElement);
+    numbersDiv.appendChild(matrix);
+}
+
+function generateRandomNumber(mode) {
+    if (mode === "decimal") {
+        return String(Math.floor(Math.random() * 100)).padStart(2, '0');
+    } else if (mode === "binary6") {
+        const binary = Array.from({length: 6}, () => Math.round(Math.random())).join('');
+        return `${binary.slice(0, 3)}<br>${binary.slice(3)}`;
+    } else if (mode === "binary8") {
+        const binary = Array.from({length: 8}, () => Math.round(Math.random())).join('');
+        return `${binary.slice(0, 4)}<br>${binary.slice(4)}`;
+    }
 }
 
 function stopGenerator() {
     isRunning = false;
-    document.getElementById('start').disabled = false;
     clearTimeout(timeoutId);
+    document.getElementById('start').disabled = false;
 }
 
 function showLastSeries() {
-    alert("Última serie:\n" + lastSeries.join('\n'));
+    const mode = document.getElementById('mode').value;
+    let message = '';
+    
+    if (mode === "matrix") {
+        message = lastSeries.map((series, i) => {
+            const formatted = series.data.match(new RegExp(`.{1,${series.cols}}`, 'g')).join('\n');
+            return `Matriz ${i+1}:\n${formatted}`;
+        }).join('\n\n');
+    } else {
+        message = lastSeries.join('\n');
+    }
+    
+    alert("Última serie:\n" + message);
 }
 
 function toggleMatrixControls() {
@@ -112,19 +178,36 @@ function toggleMatrixControls() {
 
 function validateInputs() {
     const inputs = [
-        { id: 'quantity', min: 1, msg: "La cantidad debe ser ≥ 1" },
-        { id: 'delay', min: 0, msg: "El tiempo entre números debe ser ≥ 0" },
-        { id: 'displayTime', min: 0, msg: "El tiempo de visualización debe ser ≥ 0" },
-        { id: 'size', min: 10, msg: "El tamaño mínimo es 10px" },
-        { id: 'pairs', min: 1, msg: "Debe haber al menos 1 par" }
+        { id: 'quantity', min: 1, message: "La cantidad debe ser al menos 1" },
+        { id: 'delay', min: 0, message: "El tiempo entre números no puede ser negativo" },
+        { id: 'displayTime', min: 0, message: "El tiempo de visualización no puede ser negativo" },
+        { id: 'size', min: 10, message: "El tamaño mínimo es 10px" },
+        { id: 'pairs', min: 1, message: "Debe haber al menos 1 par" }
     ];
 
-    for (const {id, min, msg} of inputs) {
-        const val = parseInt(document.getElementById(id).value);
-        if (isNaN(val) || val < min) {
-            alert(msg);
+    for (const {id, min, message} of inputs) {
+        const value = parseInt(document.getElementById(id).value);
+        if (isNaN(value) || value < min) {
+            alert(message);
             return false;
         }
     }
+    
+    if (document.getElementById('mode').value === "matrix") {
+        const matrixInputs = [
+            { id: 'rows', min: 1, message: "Las filas deben ser al menos 1" },
+            { id: 'cols', min: 1, message: "Las columnas deben ser al menos 1" },
+            { id: 'matrixSize', min: 10, message: "El tamaño de celda mínimo es 10px" }
+        ];
+        
+        for (const {id, min, message} of matrixInputs) {
+            const value = parseInt(document.getElementById(id).value);
+            if (isNaN(value) || value < min) {
+                alert(message);
+                return false;
+            }
+        }
+    }
+    
     return true;
 }
